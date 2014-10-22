@@ -11,7 +11,7 @@
   <apex:includeScript value="{!$Resource.Milestone2_jsgantt}"/>  
 
   <!-- include spec files here... -->
-  <apex:includeScript value="{!$Resource.Gantt_Behavior_Spec}"/> 
+  <apex:includeScript value="{!$Resource.Milestone2_Gantt_Behavior}"/> 
   
 
 </apex:page>

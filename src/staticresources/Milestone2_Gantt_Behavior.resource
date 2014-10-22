@@ -1,3 +1,4 @@
+//GIVEN a user is viewing a record with a gantt chart (Program, Project, Milestone)
 beforeEach(function() {
 		document.body.innerHTML += '<div id="GanttChartDIV_Test" style="background-color:white; position:relative"/>';
 
@@ -14,9 +15,9 @@ beforeEach(function() {
 
 	});
 
-describe("Gantt Load", function(){
+describe("WHEN the page has loaded", function(){
     
-	it("Should render children automatically", function(){
+	it("THEN the children should be rendered automatically", function(){
 	    expect(JSGantt.findObj('child_11').style.display).toBe("");
 	    expect(JSGantt.findObj('childgrid_11').style.display).toBe("");
 	
@@ -24,12 +25,10 @@ describe("Gantt Load", function(){
 
 });
 
-describe("Gantt Hide Children", function(){
-    
-	it("Should hide children", function(){
+describe("WHEN user selects the '-' sign next to a gantt chart item", function(){
 
-		JSGantt.hide('1', g);
-
+	it("THEN the gantt chart should hide the related children records", function(){
+		JSGantt.folder('1', g);
 	    expect(JSGantt.findObj('child_11').style.display).toBe("none");
 	    expect(JSGantt.findObj('childgrid_11').style.display).toBe("none");
 	
