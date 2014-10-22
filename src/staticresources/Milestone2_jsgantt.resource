@@ -34,6 +34,7 @@ var JSGantt; if (!JSGantt) JSGantt = {};
 
 var vTimeout = 0;
 var vBenchTime = new Date().getTime();
+JSGantt.vGanttVar = "g";
 
 /**
 * Creates a task (one row) in gantt object
@@ -219,8 +220,8 @@ var vNumKid = 0;
 var vVisible  = 1;
 var x1, y1, x2, y2;
 
-   vStart = JSGantt.parseDateStr(pStart,eval(ganttName + "\.getDateInputFormat()"));
-   vEnd   = JSGantt.parseDateStr(pEnd,eval(ganttName + "\.getDateInputFormat()"));
+   vStart = JSGantt.parseDateStr(pStart,eval(JSGantt.vGanttVar + "\.getDateInputFormat()"));
+   vEnd   = JSGantt.parseDateStr(pEnd,eval(JSGantt.vGanttVar + "\.getDateInputFormat()"));
 
 
 /**
@@ -508,7 +509,7 @@ JSGantt.GanttChart =  function(pGanttVar, pDiv, pFormat, pRecId)
 * @type String 
 * @default pGanttVar
 * @private
-*/ var vGanttVar = pGanttVar;
+*/ JSGantt.vGanttVar = pGanttVar;
 /**
 * The name of the gantt chart DIV
 * @property vDiv 
@@ -757,7 +758,7 @@ Complete-Displays task percent complete</p>
         
         for (; i < rem.length; i++)
             rem[i].parentNode.removeChild(rem[i]);
-
+            
       };
 /**
 * Draw a straight line (colored one-pixel wide DIV), need to parameterize doc item
@@ -1047,9 +1048,9 @@ Complete-Displays task percent complete</p>
 
                if( vTaskList[i].getGroup()) {
                   if( vTaskList[i].getOpen() == 1) 
-                     vLeftTable += '<SPAN id="group_' + vID + '" style="color:#000000; cursor:pointer; font-weight:bold; FONT-SIZE: 12px;" onclick=JSGantt.folder("' + vID.toString() + '",'+vGanttVar+');'+vGanttVar+'.DrawDependencies();>&ndash;</span><span style="color:#000000">&nbsp</SPAN>' ;
+                     vLeftTable += '<SPAN id="group_' + vID + '" style="color:#000000; cursor:pointer; font-weight:bold; FONT-SIZE: 12px;" onclick=JSGantt.folder("' + vID.toString() + '",'+JSGantt.vGanttVar+');'+JSGantt.vGanttVar+'.DrawDependencies();>&ndash;</span><span style="color:#000000">&nbsp</SPAN>' ;
                   else
-                     vLeftTable += '<SPAN id="group_' + vID + '" style="color:#000000; cursor:pointer; font-weight:bold; FONT-SIZE: 12px;" onclick=JSGantt.folder("' + vID.toString() + '",'+vGanttVar+');'+vGanttVar+'.DrawDependencies();>+</span><span style="color:#000000">&nbsp</SPAN>' ;
+                     vLeftTable += '<SPAN id="group_' + vID + '" style="color:#000000; cursor:pointer; font-weight:bold; FONT-SIZE: 12px;" onclick=JSGantt.folder("' + vID.toString() + '",'+JSGantt.vGanttVar+');'+JSGantt.vGanttVar+'.DrawDependencies();>+</span><span style="color:#000000">&nbsp</SPAN>' ;
          
                } else {
 
@@ -1080,32 +1081,32 @@ Complete-Displays task percent complete</p>
     
       if (vFormatArr.join().indexOf("minute")!=-1) { 
             if (vFormat=='minute') vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" VALUE="minute" checked>Minute';
-            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("minute",'+vGanttVar+'); VALUE="minute">Minute';
+            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("minute",'+JSGantt.vGanttVar+'); VALUE="minute">Minute';
       }
       
       if (vFormatArr.join().indexOf("hour")!=-1) { 
             if (vFormat=='hour') vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" VALUE="hour" checked>Hour';
-            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("hour",'+vGanttVar+'); VALUE="hour">Hour';
+            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("hour",'+JSGantt.vGanttVar+'); VALUE="hour">Hour';
       }
       
       if (vFormatArr.join().indexOf("day")!=-1) { 
             if (vFormat=='day') vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" VALUE="day" checked>Day';
-            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("day",'+vGanttVar+'); VALUE="day">Day';
+            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("day",'+JSGantt.vGanttVar+'); VALUE="day">Day';
       }
       
       if (vFormatArr.join().indexOf("week")!=-1) { 
             if (vFormat=='week') vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" VALUE="week" checked>Week';
-            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("week",'+vGanttVar+') VALUE="week">Week';
+            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("week",'+JSGantt.vGanttVar+') VALUE="week">Week';
       }
       
       if (vFormatArr.join().indexOf("month")!=-1) { 
             if (vFormat=='month') vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" VALUE="month" checked>Month';
-            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("month",'+vGanttVar+') VALUE="month">Month';
+            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("month",'+JSGantt.vGanttVar+') VALUE="month">Month';
       }
       
       if (vFormatArr.join().indexOf("quarter")!=-1) { 
             if (vFormat=='quarter') vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" VALUE="quarter" checked>Quarter';
-            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("quarter",'+vGanttVar+') VALUE="quarter">Quarter';
+            else                vLeftTable += '<INPUT TYPE=RADIO NAME="radFormat" onclick=JSGantt.changeFormat("quarter",'+JSGantt.vGanttVar+') VALUE="quarter">Quarter';
       }
       
             vLeftTable += '</TD></TR></TBODY></TABLE></TD>';
@@ -1383,7 +1384,7 @@ Complete-Displays task percent complete</p>
             if( vTaskList[i].getMile()) {
 
                vRightTable += '<DIV><TABLE style="position:relative; top:0px; width: ' + vChartWidth + 'px;" cellSpacing=0 cellPadding=0 border=0>' +
-                  '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" onMouseover=' + vGanttVar + '.mouseOver(this,' + vID + ',"right","mile") onMouseout=' + vGanttVar + '.mouseOut(this,' + vID + ',"right","mile")>' + vItemRowStr + '</TR></TABLE></DIV>';
+                  '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" onMouseover=' + JSGantt.vGanttVar + '.mouseOver(this,' + vID + ',"right","mile") onMouseout=' + JSGantt.vGanttVar + '.mouseOut(this,' + vID + ',"right","mile")>' + vItemRowStr + '</TR></TABLE></DIV>';
 
                // Build date string for Title
                vDateRowStr = JSGantt.formatDateStr(vTaskStart,vDateDisplayFormat);
@@ -1400,9 +1401,9 @@ Complete-Displays task percent complete</p>
                else
                { vRightTable += '<font size="4">&diams;</font></div>' ;}
 
-                        if( eval(vGanttVar + "\.getCaptionType()") ) {
+                        if( eval(JSGantt.vGanttVar + "\.getCaptionType()") ) {
                            vCaptionStr = '';
-                           switch( eval(vGanttVar + "\.getCaptionType()") ) {           
+                           switch( eval(JSGantt.vGanttVar + "\.getCaptionType()") ) {           
                               case 'Caption':    vCaptionStr = vTaskList[i].getCaption();  break;
                               case 'Resource':   vCaptionStr = vTaskList[i].getResource();  break;
                               case 'Duration':   vCaptionStr = vTaskList[i].getDuration(vFormat);  break;
@@ -1447,7 +1448,7 @@ Complete-Displays task percent complete</p>
 
 
                   vRightTable += '<DIV><TABLE style="position:relative; top:0px; width: ' + vChartWidth + 'px;" cellSpacing=0 cellPadding=0 border=0>' +
-                     '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" bgColor=#f3f3f3 onMouseover=' + vGanttVar + '.mouseOver(this,' + vID + ',"right","group") onMouseout=' + vGanttVar + '.mouseOut(this,' + vID + ',"right","group")>' + vItemRowStr + '</TR></TABLE></DIV>';
+                     '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" bgColor=#f3f3f3 onMouseover=' + JSGantt.vGanttVar + '.mouseOver(this,' + vID + ',"right","group") onMouseout=' + JSGantt.vGanttVar + '.mouseOut(this,' + vID + ',"right","group")>' + vItemRowStr + '</TR></TABLE></DIV>';
                   
                     vRightTable +=
                         '<div id=bardiv_' + vID + ' style="position:absolute; top:4px; left:' + Math.ceil(vTaskLeft * (vDayWidth) + 1) + 'px; height:18px; width:' + Math.ceil((vTaskRight) * (vDayWidth) - 1) + 'px">' +
@@ -1457,9 +1458,9 @@ Complete-Displays task percent complete</p>
                           
                         vRightTable += '</div>';
 
-                        if( eval(vGanttVar + "\.getCaptionType()") ) {
+                        if( eval(JSGantt.vGanttVar + "\.getCaptionType()") ) {
                            vCaptionStr = '';
-                           switch( eval(vGanttVar + "\.getCaptionType()") ) {           
+                           switch( eval(JSGantt.vGanttVar + "\.getCaptionType()") ) {           
                               case 'Caption':    vCaptionStr = vTaskList[i].getCaption();  break;
                               case 'Resource':   vCaptionStr = vTaskList[i].getResource();  break;
                               case 'Duration':   vCaptionStr = vTaskList[i].getDuration(vFormat);  break;
@@ -1474,7 +1475,7 @@ Complete-Displays task percent complete</p>
                } else {
 
                   vDivStr = '<DIV><TABLE style="position:relative; top:0px; width: ' + vChartWidth + 'px;" cellSpacing=0 cellPadding=0 border=0>' +
-                     '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" bgColor=#ffffff onMouseover=' + vGanttVar + '.mouseOver(this,' + vID + ',"right","row") onMouseout=' + vGanttVar + '.mouseOut(this,' + vID + ',"right","row")>' + vItemRowStr + '</TR></TABLE></DIV>';
+                     '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" bgColor=#ffffff onMouseover=' + JSGantt.vGanttVar + '.mouseOver(this,' + vID + ',"right","row") onMouseout=' + JSGantt.vGanttVar + '.mouseOut(this,' + vID + ',"right","row")>' + vItemRowStr + '</TR></TABLE></DIV>';
                   vRightTable += vDivStr;
                   
                   // Draw Task Bar  which has outer DIV with enclosed colored bar div, and opaque completion div
@@ -1485,9 +1486,9 @@ Complete-Displays task percent complete</p>
                            'onclick=JSGantt.taskLink("' + vTaskList[i].getLink() + '",300,200); >';
                         vRightTable += '</div>';
 
-                        if( eval(vGanttVar + "\.getCaptionType()") ) {
+                        if( eval(JSGantt.vGanttVar + "\.getCaptionType()") ) {
                            vCaptionStr = '';
-                           switch( eval(vGanttVar + "\.getCaptionType()") ) {           
+                           switch( eval(JSGantt.vGanttVar + "\.getCaptionType()") ) {           
                               case 'Caption':    vCaptionStr = vTaskList[i].getCaption();  break;
                               case 'Resource':   vCaptionStr = vTaskList[i].getResource();  break;
                               case 'Duration':   vCaptionStr = vTaskList[i].getDuration(vFormat);  break;

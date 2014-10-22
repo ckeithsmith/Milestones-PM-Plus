@@ -2,5 +2,4 @@
 <StaticResource xmlns="http://soap.sforce.com/2006/04/metadata">
     <cacheControl>Public</cacheControl>
     <contentType>application/x-javascript</contentType>
-    <description>Javascript file used for the milestone gantt chart</description>
 </StaticResource>
