@@ -18,13 +18,11 @@
     
            
     <script language="javascript">
-    eval("var gantt" + "{! myTarget }" + ";");
-    var g;
-    var ganttName = "gantt" + "{! myTarget }";
-    
+
 	(function() {
-    	eval("this.gantt" + "{! myTarget }" + "= new JSGantt.GanttChart(\"gantt\" + \"{! myTarget }\",document.getElementById(\"GanttChartDIV_{! myTarget }\"), \"{! mySize }\", \"{! myTarget }\");");
-    	g = this['gantt' + "{! myTarget }"];
+		eval("var gantt" + "{! myTarget }" + ";");
+    	this['gantt' + "{! myTarget }"] = new JSGantt.GanttChart("gantt" + "{! myTarget }",document.getElementById("GanttChartDIV_{! myTarget }"), "{! mySize }", "{! myTarget }");
+        var g = this['gantt' + "{! myTarget }"];
         var renderDiamond, completionRate, objType, childObjType;
         
         g.setShowRes(0); // Show/Hide Responsible (1/0)
