@@ -1,6 +1,6 @@
 /*******************************************************************************************************
 
-ShouldAutomaticallyCreateProject -  GIVEN an asset that needs a project,
+ShouldAutomaticallyCreateChildProject -  GIVEN an asset that needs a project,
                                     WHEN the required fields are populated,
                                     THEN automate the project creation.
                                     
@@ -37,7 +37,7 @@ public class Milestone1_Project_Creation_Behavior {
         );
     private static Milestone1_Project__c testProject = Milestone1_Test_Utility.sampleProject('Circuit' + System.now());
     
-    static testmethod void ShouldAutomaticallyCreateProject(){
+    static testmethod void ShouldAutomaticallyCreateChildProject(){
         Milestone1_Project__c proj = new Milestone1_Project__c();
         list<Milestone1_Milestone__c> Milestones = new list<Milestone1_Milestone__c>();
         list<Milestone1_Task__c> Tasks = new list<Milestone1_Task__c>();
@@ -85,7 +85,7 @@ public class Milestone1_Project_Creation_Behavior {
         
         test.starttest();
         system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
         test.stoptest();
         
         proj = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -156,7 +156,7 @@ public class Milestone1_Project_Creation_Behavior {
         
         test.starttest();
         system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
         test.stoptest();
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -225,7 +225,7 @@ public class Milestone1_Project_Creation_Behavior {
         
         test.starttest();
         system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
         test.stoptest();
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -306,7 +306,7 @@ public class Milestone1_Project_Creation_Behavior {
         
         test.starttest();
         system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
         test.stoptest();
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];

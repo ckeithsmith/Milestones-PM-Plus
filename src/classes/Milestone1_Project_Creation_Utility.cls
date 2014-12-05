@@ -1,6 +1,6 @@
 global without sharing class Milestone1_Project_Creation_Utility {
 	
-	global void CreateProject(Map<Id, sObject> oldMap, Map<Id, sObject> newMap, Map<string, object> params){
+	global void CreateChildProject(Map<Id, sObject> oldMap, Map<Id, sObject> newMap, Map<string, object> params){
 		string projectCreationField = (string)params.get('projectCreationField');
 		string projectLookupField1 = (string)params.get('projectLookupField1');
 		string projectLookupField2 = (string)params.get('projectLookupField2');
