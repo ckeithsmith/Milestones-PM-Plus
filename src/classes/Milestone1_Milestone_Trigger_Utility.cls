@@ -144,6 +144,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
             if(oldRec.Kickoff__c != null && oldRec.Deadline__c != null && newRec.Kickoff__c != null && newRec.Deadline__c != null) {
                 Integer kickoffShift = oldRec.Kickoff__c.daysBetween(newRec.Kickoff__c);
                 Integer deadlineShift = oldRec.Deadline__c.daysBetween(newRec.Deadline__c);
+
                 if(kickoffShift == deadlineShift && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) {
                     for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
                     	if (task.Start_Date__c != null)
@@ -159,6 +160,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
                 }
             }
         }
+        
         update tasksToUpdate;
     }
 
@@ -353,11 +355,9 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     }
     
     private static void updateParents(Map<Id, Milestone1_Milestone__c> recMapById){
-        //Map<Id, Milestone1_Milestone__c> recMapById = createRecMapById(recs);
-        
+
         //instantiate sets of parent IDs, to be updated afterward
         Set<Id> milestoneUpdateSet = new Set<Id>();
-        Set<Id> projectUpdateSet = new Set<Id>();
         
         for(Milestone1_Milestone__c rec : recMapById.values()){
             if(rec.Parent_Milestone__c != null){
@@ -370,20 +370,13 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
                     milestoneUpdateSet.add(rec.Parent_Milestone__c);
                     System.debug('*** added parent ' + rec.Parent_Milestone__c + ' to list of milestones to update (child: ' + rec.Name + ')');
                 }
-            } else {
-                //record does not have parent milestone
-                //mark parent project to be updated
-                projectUpdateSet.add(rec.Project__c);
-            }
+            } 
         }
         
         if(milestoneUpdateSet.size() > 0 && !alreadyMadeParent){
             updateMilestones(milestoneUpdateSet);
         }
-        //TODO force projects to go out and true themselves up, top down style
-        if(projectUpdateSet.size() > 0){
-            updateProjects(projectUpdateSet);
-        }
+
     }
     
     //create a map of records by parent milestone ID

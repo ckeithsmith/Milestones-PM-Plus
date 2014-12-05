@@ -292,6 +292,22 @@ throw ex;
                     throw new Milestone1_Import_Exception('Invalid Import ID (length must be 15)');
                 }
             }
+            //import kickoff field          
+			if (reader.getEventType() == XMLTag.START_ELEMENT && reader.getLocalName() == 'Kickoff__c') {
+                reader.next();
+                String val=getDecodedString(reader);
+                if(val == null || val == 'null')
+                    val= '';
+                project.Kickoff__c = date.valueof(val);
+            }
+            //import deadline field
+            if (reader.getEventType() == XMLTag.START_ELEMENT && reader.getLocalName() == 'Deadline__c') {
+                reader.next();
+                String val=getDecodedString(reader);
+                if(val == null || val == 'null')
+                    val= '';
+                project.Deadline__c = date.valueof(val);
+            }           
             //validate that we're done
             if(reader.getEventType() == XMLTag.END_ELEMENT && reader.getLocalName() == Milestone1_Constants.OBJ_NAME_PROJECT){
                 //system.debug('Break out of TASK');

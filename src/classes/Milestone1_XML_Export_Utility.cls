@@ -117,6 +117,9 @@ Public with sharing class Milestone1_XML_Export_Utility {
         writeElement(out,'Status__c', project.Status__c);
         writeElement(out,'Description__c',project.Description__c);
         writeElement(out,'Name', project.Name);
+        writeElement(out, 'Kickoff__c', project.Kickoff__c);
+        writeElement(out, 'Deadline__c', project.Deadline__c);
+
         for(Milestone1_Milestone__c milestone : milestones)
         {
             writeMilestoneToXML(out,milestone,true);
