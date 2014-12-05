@@ -68,39 +68,8 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
         data.setValue(0, 3, <apex:outputText value="{!Milestone1_Project__c.Total_Blocked_Task_Count__c}"/>);
         var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
         chart.draw(data, {width: 400, height: 240, title: 'Open Task Analysis', colors:['eeaa66','2299bb','ee3322'],chartArea:{left:40,top:40}});
-    
-        // we need a table to act as the datasource for the chart
-        data = new google.visualization.DataTable();
-        data.addColumn('string', 'Task Status');
-        data.addColumn('number', 'Budget');
-        data.addColumn('number', 'Planned');
-        data.addColumn('number', 'Estimated');
-        data.addColumn('number', 'Incurred');
-        data.addRows(1);
-        data.setValue(0, 0, 'Hours');
-        data.setValue(0, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Hours_Budget__c}"/>);
-        data.setValue(0, 2, <apex:outputText value="{!Milestone1_Project__c.Total_Hours_Budget_from_Milestones__c}"/>);
-        data.setValue(0, 3, <apex:outputText value="{!Milestone1_Project__c.Total_Hours_Estimate__c}"/>);
-        data.setValue(0, 4, <apex:outputText value="{!Milestone1_Project__c.Total_Hours_Incurred__c}"/>);        
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div2'));
-        chart.draw(data, {width: 400, height: 240, title: 'Task Time Budget Analysis', colors:['eeaa66','2299bb','ee3322','666666'],chartArea:{left:40,top:40}});
         
-        // we need a table to act as the datasource for the chart
-        data = new google.visualization.DataTable();
-        data.addColumn('string', 'Task Status');
-        data.addColumn('number', 'Budget');
-        data.addColumn('number', 'Planned');
-        data.addColumn('number', 'Estimated');
-        data.addColumn('number', 'Incurred');
-        data.addRows(1);
-        data.setValue(0, 0, 'Expense');
-        data.setValue(0, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Expense_Budget__c}"/>);
-        data.setValue(0, 2, <apex:outputText value="{!Milestone1_Project__c.Total_Expense_Budget_from_Milestones__c}"/>);
-        data.setValue(0, 3, <apex:outputText value="{!Milestone1_Project__c.Total_Expense_Estimate__c}"/>);
-        data.setValue(0, 4, <apex:outputText value="{!Milestone1_Project__c.Total_Expense_Incurred__c}"/>);        
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div3'));
-        chart.draw(data, {width: 400, height: 240, title: 'Task Expense Budget Analysis', colors:['eeaa66','2299bb','ee3322','666666'],chartArea:{left:40,top:40}});        
-     }
+        }
      
      google.setOnLoadCallback(drawChart);
     </script>                          
