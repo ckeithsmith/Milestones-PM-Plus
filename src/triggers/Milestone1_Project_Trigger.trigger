@@ -2,6 +2,7 @@ trigger Milestone1_Project_Trigger on Milestone1_Project__c (before update, befo
     
     if( Trigger.isUpdate ){
         Milestone1_Project_Trigger_Utility.handleProjectUpdateTrigger(trigger.new);
+        //check if date cascade is required
         Milestone1_project_Trigger_Utility.checkForDateShift(trigger.oldMap, trigger.newMap);
     } 
     else if( Trigger.isDelete ) {
