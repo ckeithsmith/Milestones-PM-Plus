@@ -6,6 +6,7 @@ global without sharing class Milestone1_Project_Creation_Utility {
 		string projectLookupField2 = (string)params.get('projectLookupField2');
 		string secondaryLookup = (string)params.get('secondaryLookup');
 		string projectNamingConventionField = (string)params.get('projectNamingConventionField');
+		string defaultTemplateName;
 		integer daysShifted;
 		
 		Document projectTemplate;
@@ -16,14 +17,25 @@ global without sharing class Milestone1_Project_Creation_Utility {
 		boolean updateflag;
 		
 		for(sObject rec : newMap.values()){
+			proj = null;
 			
 			//deremine if project creation is required.
 			if(oldMap == null && rec.get(projectCreationField) != null || (oldMap != null && rec.get(projectCreationField) != oldMap.get(rec.Id).get(projectCreationField))){
 				
 				string projectType = (string)rec.get(projectCreationField);
 				if(projectType != null){
-					projectTemplate = [select name, Id, body, contentType from Document where name =:projectType limit 1];
 					
+					try{ //query for renamed project template
+						projectTemplate = [select name, Id, body, contentType from Document where name =:projectType limit 1];
+					}catch(exception e){
+						try{ //if template has not been renamed check for default template name
+						defaultTemplateName = 'Export - ' + projectType + '%';
+						projectTemplate = [select name, Id, body, contentType from Document where name like :defaultTemplateName order by name desc limit 1];
+						}catch(exception ex){
+							//if no template exists do nothing (skip project creation)
+						}
+					}
+								
 					if(projectTemplate != null){
 						xml = projectTemplate.Body.toString();
 						proj = importUtil.importProject(xml);
