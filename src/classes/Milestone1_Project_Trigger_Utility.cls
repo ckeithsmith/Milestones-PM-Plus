@@ -217,7 +217,9 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     		if(shiftMap.get(ms.Project__c) != null){
 	    		daysToShift = shiftMap.get(ms.Project__c);
 	    		ms.Kickoff__c += daysToShift;
-	    		ms.Deadline__c += daysToShift; 
+	    		ms.Deadline__c += daysToShift;
+	    		//set flag that states updates being done are in the project trigger context
+	    		ms.Project_Creation_Context__c = true; 
     		}
     		
     	}

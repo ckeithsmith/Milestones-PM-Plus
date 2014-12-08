@@ -350,33 +350,109 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     }
     */
     
-    public static void handleMilestoneAfterTrigger(Map<Id, Milestone1_Milestone__c> recs){
-       updateParents(recs);
+    public static void handleMilestoneAfterTrigger(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> recs){
+       updateParents(oldmap, recs);
     }
     
-    private static void updateParents(Map<Id, Milestone1_Milestone__c> recMapById){
-
-        //instantiate sets of parent IDs, to be updated afterward
+    private static void updateParents(Map<Id, Milestone1_Milestone__c> oldmap, Map<Id, Milestone1_Milestone__c> recMapById){
+		//instantiate sets of parent IDs, to be updated afterward
         Set<Id> milestoneUpdateSet = new Set<Id>();
+        Set<Id> milestoneContextFlagUpdateSet = new Set<Id>();
+        Set<Id> projectUpdateSet = new Set<Id>();
         
         for(Milestone1_Milestone__c rec : recMapById.values()){
-            if(rec.Parent_Milestone__c != null){
-                if(recMapById.get(rec.Parent_Milestone__c) != null){
-                    //record has parent and parent is in our recs list
-                    //do nothing, as the parent has already been updated
-                } else {
-                    //record has parent, but parent is not in our recs list
-                    //mark parent milestone to be updated
-                    milestoneUpdateSet.add(rec.Parent_Milestone__c);
-                    System.debug('*** added parent ' + rec.Parent_Milestone__c + ' to list of milestones to update (child: ' + rec.Name + ')');
-                }
-            } 
+        	 
+        	 //check to see if the trigger call is outside of the project creation context
+        	 if(rec.Project_Creation_Context__c == false && 
+        	 oldmap != null && oldmap.get(rec.Id) != null && 
+        	 oldmap.get(rec.Id).Project_Creation_Context__c != rec.Project_Creation_Context__c
+			){
+        	 	
+	            if(rec.Parent_Milestone__c != null){
+	                if(recMapById.get(rec.Parent_Milestone__c) != null){
+	                    //record has parent and parent is in our recs list
+	                    //do nothing, as the parent has already been updated
+	                } else {
+	                    //record has parent, but parent is not in our recs list
+	                    //mark parent milestone to be updated
+	                    milestoneUpdateSet.add(rec.Parent_Milestone__c);
+	                    System.debug('*** added parent ' + rec.Parent_Milestone__c + ' to list of milestones to update (child: ' + rec.Name + ')');
+	                }
+	            } else {
+	                //record does not have parent milestone
+	                //mark parent project to be updated
+	                
+	                projectUpdateSet.add(rec.Project__c);
+	            }
+	            
+        	 }else{  //if the trigger is inside of the project creation context mark the flag on the milestone to false
+        	 	if(rec.Project_Creation_Context__c == true){
+        	 		milestoneContextFlagUpdateSet.add(rec.Id);
+        	 	}
+        	 }
+        	
         }
         
         if(milestoneUpdateSet.size() > 0 && !alreadyMadeParent){
             updateMilestones(milestoneUpdateSet);
         }
+        //TODO force projects to go out and true themselves up, top down style
+        if(projectUpdateSet.size() > 0){
+            updateProjects(projectUpdateSet);
+        }
+        
+        if(milestoneContextFlagUpdateSet.size() > 0){
+        	updateMilestoneContextFlag(milestoneContextFlagUpdateSet);
+        }
 
+    }
+    
+    public static void handleUpdatesAfterMilestoneDeletionOrInsert(Map<Id, Milestone1_Milestone__c> recMapById){
+    	//instantiate sets of parent IDs, to be updated afterward
+		Set<Id> milestoneUpdateSet = new Set<Id>();
+		Set<Id> projectUpdateSet = new Set<Id>();
+		for(Milestone1_Milestone__c rec : recMapById.values()){
+			
+			if(rec.Project_Creation_Context__c == false){
+				
+				if(rec.Parent_Milestone__c != null){
+					if(recMapById.get(rec.Parent_Milestone__c) != null){
+					//record has parent and parent is in our recs list
+					//do nothing, as the parent has already been updated
+					} else {
+						//record has parent, but parent is not in our recs list
+						//mark parent milestone to be updated
+						milestoneUpdateSet.add(rec.Parent_Milestone__c);
+						System.debug('*** added parent ' + rec.Parent_Milestone__c + ' to list of milestones to update (child: ' + rec.Name + ')');
+					}
+				} else {
+					//record does not have parent milestone
+					//mark parent project to be updated
+					projectUpdateSet.add(rec.Project__c);
+				}
+			
+			}
+			
+		}
+		if(milestoneUpdateSet.size() > 0 && !alreadyMadeParent){
+			updateMilestones(milestoneUpdateSet);
+		}
+		//TODO force projects to go out and true themselves up, top down style
+		if(projectUpdateSet.size() > 0){
+			updateProjects(projectUpdateSet);
+		}
+    }
+    
+    @future
+    private static void updateMilestoneContextFlag(set<id> MilestoneSet){
+    	
+    	List<Milestone1_Milestone__c> milestones = [select id, Project_Creation_Context__c from Milestone1_Milestone__c where id in :MilestoneSet];
+    	
+    	for(Milestone1_Milestone__c ms : milestones){
+    		ms.Project_Creation_Context__c = false;
+    	}
+    	
+    	update milestones;
     }
     
     //create a map of records by parent milestone ID
