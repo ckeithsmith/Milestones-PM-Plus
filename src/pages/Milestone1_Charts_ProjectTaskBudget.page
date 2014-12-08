@@ -45,7 +45,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     google.load("visualization", "1", {packages:["corechart"]});
     
       function drawChart() {
- // we need a table to act as the datasource for the chart
+ 		// we need a table to act as the datasource for the chart
         data = new google.visualization.DataTable();
         data.addColumn('string', 'Task Status');
         data.addColumn('number', 'Budget');
