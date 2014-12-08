@@ -64,7 +64,7 @@ public class Milestone1_Project_Creation_Behavior {
         controller.createExportXML();
         
         Document doc = [Select Name, Id, Body, ContentType From Document];
-        doc.Name = 'Standard';
+        doc.Name = 'Closed Won';
         doc.AuthorId = UserInfo.getUserId();
         doc.FolderId = UserInfo.getUserId();
         upsert doc;
@@ -78,19 +78,19 @@ public class Milestone1_Project_Creation_Behavior {
         insert oldOpp;
         oldMap = new map<id, sObject>{opp.Id => oldOpp};
                 
-        opp.project_template_type__c = 'Standard';
+        opp.StageName = 'Closed Won';
         update opp;
-        opp = [select Project_Template_Type__c, AccountId, Project_Name__c from Opportunity where id =:opp.Id];
+        opp = [select StageName, AccountId, Name from Opportunity where id =:opp.Id];
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
         proj = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
         system.assert(proj != null, 'Did not insert Project');
-        system.assertequals('Test | test opp | Standard',  proj.name);
+        system.assertequals('test opp',  proj.name);
         
         milestones = [select id from Milestone1_Milestone__c where Project__c = :proj.Id];
         system.assertEquals(1, milestones.size());
@@ -135,7 +135,7 @@ public class Milestone1_Project_Creation_Behavior {
         controller.createExportXML();
         
         Document doc = [Select Name, Id, Body, ContentType From Document];
-        doc.Name = 'Standard';
+        doc.Name = 'Closed Won';
         doc.AuthorId = UserInfo.getUserId();
         doc.FolderId = UserInfo.getUserId();
         upsert doc; 
@@ -149,14 +149,14 @@ public class Milestone1_Project_Creation_Behavior {
         insert oldOpp;
         oldMap = new map<id, sObject>{opp.Id => oldOpp};        
         
-        opp.project_template_type__c = 'Standard';
+        opp.StageName = 'Closed Won';
         update opp;
-        opp = [select Project_Template_Type__c, AccountId, Project_Name__c from Opportunity where id =:opp.Id];
+        opp = [select StageName, AccountId, Name from Opportunity where id =:opp.Id];
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -204,7 +204,7 @@ public class Milestone1_Project_Creation_Behavior {
         controller.createExportXML();
         
         Document doc = [Select Name, Id, Body, ContentType From Document];
-        doc.Name = 'Standard';
+        doc.Name = 'Closed Won';
         doc.AuthorId = UserInfo.getUserId();
         doc.FolderId = UserInfo.getUserId();
         upsert doc; 
@@ -218,14 +218,14 @@ public class Milestone1_Project_Creation_Behavior {
         insert oldOpp;
         oldMap = new map<id, sObject>{opp.Id => oldOpp};        
         
-        opp.project_template_type__c = 'Standard';
+        opp.StageName = 'Closed Won';
         update opp;
-        opp = [select Project_Template_Type__c, AccountId, Project_Name__c from Opportunity where id =:opp.Id];
+        opp = [select StageName, AccountId, Name from Opportunity where id =:opp.Id];
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -285,7 +285,7 @@ public class Milestone1_Project_Creation_Behavior {
         controller.createExportXML();
         
         Document doc = [Select Name, Id, Body, ContentType From Document];
-        doc.Name = 'Standard';
+        doc.Name = 'Closed Won';
         doc.AuthorId = UserInfo.getUserId();
         doc.FolderId = UserInfo.getUserId();
         upsert doc; 
@@ -299,14 +299,14 @@ public class Milestone1_Project_Creation_Behavior {
         insert oldOpp;
         oldMap = new map<id, sObject>{opp.Id => oldOpp};        
         
-        opp.project_template_type__c = 'Standard';
+        opp.StageName = 'Closed Won';
         update opp;
-        opp = [select Project_Template_Type__c, AccountId, Project_Name__c from Opportunity where id =:opp.Id];
+        opp = [select StageName, AccountId, Name from Opportunity where id =:opp.Id];
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Project_Name__c from Opportunity where id =:opp.Id]);
-        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'Project_Template_Type__c', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Project_Name__c'});
+        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
