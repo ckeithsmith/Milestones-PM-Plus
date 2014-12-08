@@ -156,7 +156,6 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 			}
         }
     }
-
     
     /**
     * Avoid duplicates names
@@ -174,8 +173,7 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     		}
     	}
     	
-    }
-    
+    }   
    
     public static void checkForDateShift(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap){
     	integer numberOfDaysShifted;

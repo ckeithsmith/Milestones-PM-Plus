@@ -381,7 +381,6 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	            } else {
 	                //record does not have parent milestone
 	                //mark parent project to be updated
-	                
 	                projectUpdateSet.add(rec.Project__c);
 	            }
 	            
@@ -444,6 +443,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     }
     
     @future
+    //need future method to prevent recursion
     private static void updateMilestoneContextFlag(set<id> MilestoneSet){
     	
     	List<Milestone1_Milestone__c> milestones = [select id, Project_Creation_Context__c from Milestone1_Milestone__c where id in :MilestoneSet];
@@ -511,9 +511,6 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 			Database.executeBatch( new Milestone1_Project_Batch_Update(idSet) );
 		}
 	}
-
-
-
 
 	/**
 	* Check if the User have privileges over current Object
