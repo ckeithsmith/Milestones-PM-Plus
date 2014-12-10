@@ -156,7 +156,6 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 			}
         }
     }
-
     
     /**
     * Avoid duplicates names
@@ -173,6 +172,57 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     			tm.Name.addError( 'Project Name is already used.' );
     		}
     	}
+    	
+    }   
+   
+    public static void checkForDateShift(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap){
+    	integer numberOfDaysShifted;
+    	map<Id, integer> projectShiftMap = new map<Id, integer>();
+    	
+	    	for(Milestone1_Project__c proj : newMap.values()){
+	    		
+	    		if(oldMap.get(proj.Id).Kickoff__c != null && proj.Kickoff__c != null 
+	    		   && oldMap.get(proj.Id).Kickoff__c != proj.Kickoff__c 
+	    		   && oldmap.get(proj.Id).Deadline__c != proj.Deadline__c){
+		    		numberOfDaysShifted = oldMap.get(proj.Id).Kickoff__c.daysBetween(proj.Kickoff__c);
+		    		
+		    		if(numberOfDaysShifted != 0){
+		    			//Shift Related Milestones
+		    			if(projectShiftMap.get(proj.Id) == null){
+		    				projectShiftMap.put(proj.Id, numberOfDaysShifted);
+		    			}
+		    		}
+	    		}
+	    		
+	    	}
+	    	
+	    	if(projectShiftMap.size() > 0){
+	    		shiftProjectsMilestones(projectShiftMap);
+	    	}
+    	
+    	
+    }
+    
+    public static void shiftProjectsMilestones(map<Id, integer> shiftMap){
+    	
+    	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT Kickoff__c, Deadline__c, Project__c 
+    														from Milestone1_Milestone__c 
+    														where Project__c IN :shiftMap.keySet() and Kickoff__c != null and Deadline__c != null];
+    	integer daysToShift;
+    	
+    	for(Milestone1_Milestone__c ms : MilestonesToUpdate){
+    		
+    		if(shiftMap.get(ms.Project__c) != null){
+	    		daysToShift = shiftMap.get(ms.Project__c);
+	    		ms.Kickoff__c += daysToShift;
+	    		ms.Deadline__c += daysToShift;
+	    		//set flag that states updates being done are in the project trigger context
+	    		ms.Project_Creation_Context__c = true; 
+    		}
+    		
+    	}
+    	
+    	update MilestonesToUpdate;
     	
     }
     
