@@ -161,7 +161,7 @@ public class Milestone1_Project_Creation_Behavior {
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
-        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
         system.assertequals(1, projList.Size());
         
         proj = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -235,7 +235,7 @@ public class Milestone1_Project_Creation_Behavior {
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
-        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
         system.assertequals(1, projList.Size());
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -307,7 +307,7 @@ public class Milestone1_Project_Creation_Behavior {
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
-        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
         system.assertequals(1, projList.Size());
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -391,7 +391,7 @@ public class Milestone1_Project_Creation_Behavior {
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
-        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
         system.assertequals(1, projList.Size());
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -477,7 +477,7 @@ public class Milestone1_Project_Creation_Behavior {
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
-        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
         system.assertequals(1, projList.Size());
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
@@ -586,7 +586,7 @@ public class Milestone1_Project_Creation_Behavior {
 		
 		test.stopTest();
 		
-		list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+		list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
         system.assertequals(1, projList.Size());
         
         proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
