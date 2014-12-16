@@ -43,7 +43,7 @@ public class Milestone1_Task_Trigger_Utility {
         	String queryString = 'Select Id, ParentId, SubscriberId from EntitySubscription where ParentId in (';
 	        for(Id recId:recIds)
 	        	queryString += '\''+recId+'\',';
-	        queryString = queryString.substring(0,queryString.length()-1) + ')'; //trim the trailing comma 
+	        queryString = queryString.substring(0,queryString.length()-1) + ') LIMIT 1000'; //trim the trailing comma 
 	        existingSubscriptions= Database.query(queryString);
         }
         //Create a Map of Users to Subscriptions
