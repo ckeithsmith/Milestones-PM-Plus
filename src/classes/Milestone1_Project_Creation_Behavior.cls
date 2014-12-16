@@ -566,24 +566,23 @@ public class Milestone1_Project_Creation_Behavior {
 
 		//Create a non-admin user
 		for( Profile p : [ Select Id, PermissionsViewAllData, Name from Profile
-		where userLicense.licenseDefinitionKey = 'SFDC'
-		AND PermissionsViewAllData = false
-		AND PermissionsModifyAllData = false] ){
-		profileUsed = p;
-		break;
-		}
-		userObj = Milestone1_Test_Utility.createSFUser(profileUsed);
-		system.debug('user Id for test ' + userObj.Id);
-		Test.startTest();
-		System.runAs(userObj) {
-			
-			
-			system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
-        	projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
-			
-			
+						   where userLicense.licenseDefinitionKey = 'SFDC'
+						   AND PermissionsViewAllData = false
+						   AND PermissionsModifyAllData = false] ){
+			profileUsed = p;
+			break;
 		}
 		
+		userObj = Milestone1_Test_Utility.createSFUser(profileUsed);
+		system.debug('user Id for test ' + userObj.Id);
+		
+		Test.startTest();
+		System.runAs(userObj) {
+
+			system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
+        	projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
+	
+		}
 		test.stopTest();
 		
 		list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
