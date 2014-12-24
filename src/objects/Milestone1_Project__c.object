@@ -374,6 +374,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Blocked_Task_Count__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>How many tasks associated with this project are blocked? (Calculated)</inlineHelpText>
         <label>Total Blocked Task Count</label>
@@ -387,6 +388,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Complete_Task_Count__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>How many complete tasks are there in this project?  (Calculated.)</inlineHelpText>
         <label>Total Complete Task Count</label>
@@ -400,6 +402,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Expense_Budget__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>The total expense budget for this project.</inlineHelpText>
         <label>Total Expense Budget</label>
@@ -412,6 +415,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Expense_Budget_from_Milestones__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Calculated from the milestone expense budgets assigned to this project.</inlineHelpText>
         <label>Total Expense Budget from Milestones</label>
@@ -424,6 +428,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Expense_Estimate__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Calculated from expense estimates on all child milestones</inlineHelpText>
         <label>Total Expense Estimate</label>
@@ -436,6 +441,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Expense_Incurred__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Calculated from expense records related to tasks on all child milestones</inlineHelpText>
         <label>Total Expense Incurred</label>
@@ -448,6 +454,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Hours_Budget__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>The total hours budget for this project.</inlineHelpText>
         <label>Total Hours Budget</label>
@@ -461,6 +468,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Hours_Budget_from_Milestones__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Calculated from hours budgets for milestones in this project.</inlineHelpText>
         <label>Total Hours Budget from Milestones</label>
@@ -474,6 +482,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Hours_Estimate__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Calculated from hours estimates on all child milestones</inlineHelpText>
         <label>Total Hours Estimate</label>
@@ -487,6 +496,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Hours_Incurred__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>Calculated from time records related to tasks on all child milestones</inlineHelpText>
         <label>Total Hours Incurred</label>
@@ -500,6 +510,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Late_Task_Count__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>How many tasks associated with this project are late?  (Calculated)</inlineHelpText>
         <label>Total Late Task Count</label>
@@ -513,6 +524,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
     </fields>
     <fields>
         <fullName>Total_Open_Task_Count__c</fullName>
+        <defaultValue>0</defaultValue>
         <externalId>false</externalId>
         <inlineHelpText>How many open tasks are there in this project? (Calculated. Includes Late and Blocked tasks.)</inlineHelpText>
         <label>Total Open Task Count</label>
