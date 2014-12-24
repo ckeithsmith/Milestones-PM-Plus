@@ -63,6 +63,10 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
         for(Milestone1_Milestone__c newRec : newMap.values()){
             Milestone1_Milestone__c oldRec = oldMap.get(newRec.Id);
             
+            if(oldRec.Project_Creation_Context__c == true){
+            	newRec.Project_Creation_Context__c = false;
+            }
+            
             if(oldRec.Project__c != newRec.Project__c && newRec.Okay_to_Reparent__c == false){
             	//don't want to reparent if not OK to reparent.
                 allPassed = false;
@@ -402,8 +406,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
         	 
         	 //check to see if the trigger call is outside of the project creation context
         	 if(rec.Project_Creation_Context__c == false && 
-        	 oldmap != null && oldmap.get(rec.Id) != null && 
-        	 oldmap.get(rec.Id).Project_Creation_Context__c != rec.Project_Creation_Context__c
+        	 oldmap != null && oldmap.get(rec.Id) != null
 			){
         	 	
 	            if(rec.Parent_Milestone__c != null){
@@ -420,6 +423,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	                //record does not have parent milestone
 	                //mark parent project to be updated
 	                projectUpdateSet.add(rec.Project__c);
+	                   
 	            }
 	            
         	 }else{  //if the trigger is inside of the project creation context mark the flag on the milestone to false
@@ -437,11 +441,6 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
         if(projectUpdateSet.size() > 0){
             updateProjects(projectUpdateSet);
         }
-        
-        if(milestoneContextFlagUpdateSet.size() > 0){
-        	updateMilestoneContextFlag(milestoneContextFlagUpdateSet);
-        }
-
     }
     
     public static void handleUpdatesAfterMilestoneDeletionOrInsert(Map<Id, Milestone1_Milestone__c> recMapById){
@@ -476,21 +475,8 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 		}
 		//TODO force projects to go out and true themselves up, top down style
 		if(projectUpdateSet.size() > 0){
-			updateProjects(projectUpdateSet);
+			updateProjectsAfterDelete(projectUpdateSet);
 		}
-    }
-    
-    @future
-    //need future method to prevent recursion
-    private static void updateMilestoneContextFlag(set<id> MilestoneSet){
-    	
-    	List<Milestone1_Milestone__c> milestones = [select id, Project_Creation_Context__c from Milestone1_Milestone__c where id in :MilestoneSet];
-    	
-    	for(Milestone1_Milestone__c ms : milestones){
-    		ms.Project_Creation_Context__c = false;
-    	}
-    	
-    	update milestones;
     }
     
     //create a map of records by parent milestone ID
@@ -535,8 +521,28 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     		batchUpdateProjects(idSet);
     	}
     	else{
-	        update [SELECT Id FROM Milestone1_Project__c WHERE Id IN :idSet];
+    		//Uses future method to update projects to prevent trigger self reference.
+			try{
+				update [SELECT Id FROM Milestone1_Project__c WHERE Id IN :idSet];
+			}
+			catch (exception e){
+				futureUpdateToProjects(idSet);
+			}
     	}
+    }
+    
+    private static void updateProjectsAfterDelete(Set<Id> idSet) {
+    	if( idSet.size() + Limits.getDMLRows() > Limits.getLimitDmlRows() ){
+    		batchUpdateProjects(idSet);
+    	}
+    	else{
+			update [SELECT Id FROM Milestone1_Project__c WHERE Id IN :idSet];
+    	}
+    }
+    
+    @future
+    private static void futureUpdateToProjects(set<Id> projects){
+    	update [SELECT Id FROM Milestone1_Project__c WHERE Id IN :projects and isDeleted = false];
     }
 
 	/**

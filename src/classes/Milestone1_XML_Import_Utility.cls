@@ -70,33 +70,33 @@ Public with sharing class Milestone1_XML_Import_Utility {
     
     Public Milestone1_Project__c importProject(String xml) {
 
-Savepoint sp = Database.setSavepoint();
-try{
-Xmlstreamreader reader = new Xmlstreamreader(xml);
-while (reader.hasNext()) {
-if (reader.getEventType() == XmlTag.START_ELEMENT && reader.getLocalName() == Milestone1_Constants.XML_META) {
-//System.debug(LoggingLevel.warn, 'Parse XML Metadata');
-parseMeta(reader);
-}
-if (reader.getEventType() == XmlTag.START_ELEMENT && reader.getLocalName() == Milestone1_Constants.OBJ_NAME_PROJECT) {
-//System.debug(LoggingLevel.warn, 'Parse XML Project');
-parseProject(reader);
-}
-reader.next();
-}
-insertSalesforceObjects();
-}catch(Exception ex){
-Database.rollback(sp);
-throw ex;
-//throw new Milestone1_Import_Exception(Milestone1_Import_Exception.ERROR_INVALID_XML);
-}
+	Savepoint sp = Database.setSavepoint();
+		try{
+			Xmlstreamreader reader = new Xmlstreamreader(xml);
+			while (reader.hasNext()) {
+				if (reader.getEventType() == XmlTag.START_ELEMENT && reader.getLocalName() == Milestone1_Constants.XML_META) {
+					//System.debug(LoggingLevel.warn, 'Parse XML Metadata');
+					parseMeta(reader);		
+				}
+				if (reader.getEventType() == XmlTag.START_ELEMENT && reader.getLocalName() == Milestone1_Constants.OBJ_NAME_PROJECT) {
+					//System.debug(LoggingLevel.warn, 'Parse XML Project');
+					parseProject(reader);
+				}
+				reader.next();
+			}
+			insertSalesforceObjects();
+		}catch(Exception ex){
+			Database.rollback(sp);
+			throw ex;
+		//throw new Milestone1_Import_Exception(Milestone1_Import_Exception.ERROR_INVALID_XML);
+		}
         return project;
     }
 
     private void insertSalesforceObjects()
     {
-        //System.debug('Number of Milestones: ' + this.milestones.size());
-        //System.debug('Number of Tasks: ' + this.tasks.size());
+        //System.debug(logginglevel.error, 'Number of Milestones: ' + this.milestones.size());
+        //System.debug(logginglevel.error, 'Number of Tasks: ' + this.tasks.size());
         if(project == null || project.Name == null || project.ImportID__c == null || project.ImportID__c.length() < 15)
         {
             throw new Milestone1_Import_Exception(system.label.Milestone1_ProjectCannotBeNull);
@@ -121,6 +121,7 @@ throw ex;
         
 	        for(Milestone1_Milestone__c currentMilestone : milestones)
 	        {
+	        	currentMilestone.Project_Creation_Context__c = true;
 	            currentMilestone.Project__c = project.Id;
 	            if(currentMilestone.Predecessor_Milestone__c!=null)
 	            	{
@@ -138,12 +139,15 @@ throw ex;
             matchMilestonesToMilestones(subMilestones,currentMilestone);
         }
         for(Milestone1_Milestone__c currentMilestone : subMilestones)
-        if(currentMilestone.Predecessor_Milestone__c!=null)
+        {
+        	currentMilestone.Project_Creation_Context__c = true;
+       		if(currentMilestone.Predecessor_Milestone__c!=null)
 	            	{
 	            		successorsList.add(currentMilestone);
 	            		currentMilestone.Predecessor_Milestone_Import_Id__c=currentMilestone.Predecessor_Milestone__c;
 	            		currentMilestone.Predecessor_Milestone__c=null;
 	            	}
+        }
 	    insert subMilestones;
         
         for(Milestone1_Milestone__c currentMilestone : milestones){
