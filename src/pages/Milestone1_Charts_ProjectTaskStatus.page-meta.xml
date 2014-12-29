@@ -4,4 +4,19 @@
     <availableInTouch>false</availableInTouch>
     <confirmationTokenRequired>false</confirmationTokenRequired>
     <label>Milestone1_Charts_ProjectTaskStatus</label>
+    <packageVersions>
+        <majorNumber>7</majorNumber>
+        <minorNumber>1</minorNumber>
+        <namespace>RHX_PRO_NQ</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>7</majorNumber>
+        <minorNumber>19</minorNumber>
+        <namespace>rh2</namespace>
+    </packageVersions>
+    <packageVersions>
+        <majorNumber>7</majorNumber>
+        <minorNumber>5</minorNumber>
+        <namespace>rhx</namespace>
+    </packageVersions>
 </ApexPage>
