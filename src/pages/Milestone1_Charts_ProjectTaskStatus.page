@@ -26,6 +26,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
 -->
 <apex:page standardController="Milestone1_Project__c" sidebar="false">
+<script type='text/javascript' src='/soap/ajax/20.0/connection.js'></script>
 <script type='text/javascript' src='https://www.google.com/jsapi'></script>
     <apex:outputPanel >
     <table class="detailList" cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -43,33 +44,39 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <script>
     var data;    
     google.load("visualization", "1", {packages:["corechart"]});
-    
+      
       function drawChart() {
-        data = new google.visualization.DataTable();
-        data.addColumn('string', 'Task Status');
-        data.addColumn('number', 'No. of Tasks');
-        data.addRows(2);
-        data.setValue(0, 0, 'Open Tasks');
-        data.setValue(0, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Open_Task_Count__c}"/>);
-        data.setValue(1, 0, 'Complete Tasks');
-        data.setValue(1, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Complete_Task_Count__c}"/>);
-        var chart = new google.visualization.PieChart(document.getElementById('chart_div0'));
-        chart.draw(data, {width: 400, height: 240, title: 'Task Analysis',pieSliceText:'value', colors:['eeaa66','2299bb'],chartArea:{left:40,top:40,width:"80%",height:"60%"}});
-    
-        data = new google.visualization.DataTable();
-        data.addColumn('string', 'Task Status');
-        data.addColumn('number', 'Open');
-        data.addColumn('number', 'Late');
-        data.addColumn('number', 'Blocked');
-        data.addRows(1);
-        data.setValue(0, 0, 'No. of Tasks');
-        data.setValue(0, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Open_Task_Count__c}"/>);
-        data.setValue(0, 2, <apex:outputText value="{!Milestone1_Project__c.Total_Late_Task_Count__c}"/>);
-        data.setValue(0, 3, <apex:outputText value="{!Milestone1_Project__c.Total_Blocked_Task_Count__c}"/>);
-        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
-        chart.draw(data, {width: 400, height: 240, title: 'Open Task Analysis', colors:['eeaa66','2299bb','ee3322'],chartArea:{left:40,top:40}});
-        
-        }
+	
+	        if ({!Milestone1_Project__c.Total_Open_Task_Count__c == 0} && {!Milestone1_Project__c.Total_Complete_Task_Count__c == 0}) {
+        		document.write("Please add some tasks to this project to display task analysis charts.");
+        	}
+	        data = new google.visualization.DataTable();
+	        data.addColumn('string', 'Task Status');
+	        data.addColumn('number', 'No. of Tasks');
+	        data.addRows(2);
+	        data.setValue(0, 0, 'Open Tasks');
+	        data.setValue(0, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Open_Task_Count__c}"/>);
+	        data.setValue(1, 0, 'Complete Tasks');
+	        data.setValue(1, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Complete_Task_Count__c}"/>);
+	        var chart = new google.visualization.PieChart(document.getElementById('chart_div0'));
+	        chart.draw(data, {width: 400, height: 240, title: 'Task Analysis',pieSliceText:'value', colors:['eeaa66','2299bb'],chartArea:{left:40,top:40,width:"80%",height:"60%"}});
+	    
+	        data = new google.visualization.DataTable();
+	        data.addColumn('string', 'Task Status');
+	        data.addColumn('number', 'Open');
+	        data.addColumn('number', 'Late');
+	        data.addColumn('number', 'Blocked');
+	        data.addRows(1);
+	        data.setValue(0, 0, 'No. of Tasks');
+	        data.setValue(0, 1, <apex:outputText value="{!Milestone1_Project__c.Total_Open_Task_Count__c}"/>);
+	        data.setValue(0, 2, <apex:outputText value="{!Milestone1_Project__c.Total_Late_Task_Count__c}"/>);
+	        data.setValue(0, 3, <apex:outputText value="{!Milestone1_Project__c.Total_Blocked_Task_Count__c}"/>);
+	        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
+	        chart.draw(data, {width: 400, height: 240, title: 'Open Task Analysis', colors:['eeaa66','2299bb','ee3322'],chartArea:{left:40,top:40}});
+		//}  else {
+		//	log("Failed to update project: " + result[0]);
+		//}  
+     }
      
      google.setOnLoadCallback(drawChart);
     </script>                          
