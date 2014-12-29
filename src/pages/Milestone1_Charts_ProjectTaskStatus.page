@@ -73,9 +73,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 	        data.setValue(0, 3, <apex:outputText value="{!Milestone1_Project__c.Total_Blocked_Task_Count__c}"/>);
 	        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div1'));
 	        chart.draw(data, {width: 400, height: 240, title: 'Open Task Analysis', colors:['eeaa66','2299bb','ee3322'],chartArea:{left:40,top:40}});
-		//}  else {
-		//	log("Failed to update project: " + result[0]);
-		//}  
      }
      
      google.setOnLoadCallback(drawChart);
