@@ -228,7 +228,6 @@ public class Milestone1_Project_Creation_Behavior {
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
@@ -276,7 +275,6 @@ public class Milestone1_Project_Creation_Behavior {
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
@@ -357,7 +355,6 @@ public class Milestone1_Project_Creation_Behavior {
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
@@ -399,7 +396,6 @@ public class Milestone1_Project_Creation_Behavior {
         controller.createExportXML();
         
         Document doc = [Select Name, Id, Body, ContentType From Document];
-        system.debug(logginglevel.error, doc.name);
         doc.AuthorId = UserInfo.getUserId();
         doc.FolderId = UserInfo.getUserId();
         upsert doc; 
@@ -419,7 +415,6 @@ public class Milestone1_Project_Creation_Behavior {
         newMap = new map<id, sObject>{opp.Id => opp};
         
         test.starttest();
-        system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
         projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
         test.stoptest();
         
@@ -463,7 +458,6 @@ public class Milestone1_Project_Creation_Behavior {
         controller.createExportXML();
         
         Document doc = [Select Name, Id, Body, ContentType From Document];
-        system.debug(logginglevel.error, doc.name);
         doc.AuthorId = UserInfo.getUserId();
         doc.FolderId = UserInfo.getUserId();
         upsert doc; 
@@ -497,7 +491,6 @@ public class Milestone1_Project_Creation_Behavior {
 		Test.startTest();
 		System.runAs(userObj) {
 
-			system.debug(logginglevel.error, [select Name from Opportunity where id =:opp.Id]);
         	projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
 	
 		}

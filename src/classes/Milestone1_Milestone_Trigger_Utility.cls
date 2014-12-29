@@ -198,7 +198,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     	
     	for(Milestone1_Milestone__c ms : newMap.Values()){
     		
-    		if(oldMap.get(ms.Id).Kickoff__c != ms.Kickoff__c /* && oldMap.get(ms.Id).Project_Creation_Context__c == false && ms.Project_Creation_Context__c == false */){
+    		if(oldMap.get(ms.Id).Kickoff__c != ms.Kickoff__c){
     			return true;
     		}
     	}
@@ -421,15 +421,24 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	                }
 	            } else {
 	                //record does not have parent milestone
-	                //mark parent project to be updated
-	                projectUpdateSet.add(rec.Project__c);
+	                //mark parent project to be updated if updates need to be made
+	                if(
+	                	rec.Total_Actual_Hours__c != oldmap.get(rec.Id).Total_Actual_Hours__c ||
+		                rec.Total_Estimated_Hours__c != oldmap.get(rec.Id).Total_Estimated_Hours__c ||
+		                rec.Total_Actual_Expense__c != oldmap.get(rec.Id).Total_Actual_Expense__c ||
+		                rec.Total_Estimated_Expense__c != oldmap.get(rec.Id).Total_Estimated_Expense__c ||
+		                rec.Total_Hours_Budget__c != oldmap.get(rec.Id).Total_Hours_Budget__c ||
+		                rec.Total_Expense_Budget__c != oldmap.get(rec.Id).Total_Expense_Budget__c ||
+		                rec.Total_Complete_Tasks__c != oldmap.get(rec.Id).Total_Complete_Tasks__c ||
+		                rec.Total_Open_Tasks__c != oldmap.get(rec.Id).Total_Open_Tasks__c ||
+		                rec.Total_Blocked_Tasks__c != oldmap.get(rec.Id).Total_Blocked_Tasks__c ||
+		                rec.Total_Late_Tasks__c != oldmap.get(rec.Id).Total_Late_Tasks__c
+	                ){
+	                	projectUpdateSet.add(rec.Project__c);
+	                }
 	                   
 	            }
 	            
-        	 }else{  //if the trigger is inside of the project creation context mark the flag on the milestone to false
-        	 	if(rec.Project_Creation_Context__c == true){
-        	 		milestoneContextFlagUpdateSet.add(rec.Id);
-        	 	}
         	 }
         	
         }
@@ -521,13 +530,9 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     		batchUpdateProjects(idSet);
     	}
     	else{
-    		//Uses future method to update projects to prevent trigger self reference.
-			try{
-				update [SELECT Id FROM Milestone1_Project__c WHERE Id IN :idSet];
-			}
-			catch (exception e){
-				futureUpdateToProjects(idSet);
-			}
+
+			futureUpdateToProjects(idSet);
+
     	}
     }
     
