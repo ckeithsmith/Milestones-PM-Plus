@@ -25,11 +25,11 @@ Comments:Calendar-move between months take a while so Processing pop-up has been
          <td colspan="3">
          </td>
          <td>
-            {!$Label.Milestone1_FilterProjectBy}:
+           {!$Label.Milestone1_FilterProjectBy}: 
          </td>
         <td> 
-            <apex:selectList size="1" value="{!selectedProject}">
-                <apex:selectOptions value="{!activeProjectList}"/> 
+            <apex:selectList size="1" value="{!projectStatus}">
+                <apex:selectOptions value="{!projectStatusList}"/> 
             </apex:selectList>
         </td> 
     </tr>
