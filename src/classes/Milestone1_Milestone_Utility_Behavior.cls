@@ -1,3 +1,12 @@
+/***************************************************************************************
+
+shouldAllowDateShiftWhenSuccessorMilestonesDatesAreNull - Given a successor milestone 
+									does not have a start or due date, WHEN the predecessor
+									milestone is shifted, THEN do not modify the successor
+									milestone dates.
+
+****************************************************************************************/
+
 @isTest 
 public class Milestone1_Milestone_Utility_Behavior {
 	
@@ -11,7 +20,6 @@ public class Milestone1_Milestone_Utility_Behavior {
         testProject.Deadline__c = date.today();
         insert testProject;
 
-         
         testMilestone = Milestone1_Test_Utility.sampleMilestone(testProject.Id,null,'Milestone 1' + System.now());
         testMilestone.Kickoff__c = date.today().addDays(-5);
         testMilestone.Deadline__c = date.today();
