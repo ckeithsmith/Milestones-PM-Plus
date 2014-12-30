@@ -54,6 +54,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 var data;    
 google.load("visualization", "1", {packages:["corechart"]});
 
+
 var searchTargetId = '';
 var objectMap = [
         <apex:repeat var="item" value="{!recentItems}">
