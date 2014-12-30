@@ -32,7 +32,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 <apex:includeScript value="{!URLFOR($Resource.Milestone1_Charts, 'jquery-ui-1.8.7.custom.min.js')}"/>
 <apex:includeScript value="{!URLFOR($Resource.Milestone1_Charts, 'jquery.ganttView.js')}"/>
 <apex:stylesheet value="{!URLFOR($Resource.Milestone1_Charts, 'jquery-ui-1.8.4.css')}"/>
-<apex:stylesheet value="{!URLFOR($Resource.Milestone1_Charts, 'reset.css')}"/>
 <apex:stylesheet value="{!URLFOR($Resource.Milestone1_Charts, 'jquery.ganttView.css')}"/>
 
 <style type="text/css">
