@@ -100,8 +100,11 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	                Integer deadlineShift = oldRec.Deadline__c.daysBetween(newRec.Deadline__c);
 	                if(deadlineShift != 0 && successorMap.containsKey(newRec.Id)) {
 	                    for(Milestone1_Milestone__c successor: successorMap.get(newRec.Id)) {
-	                        successor.Kickoff__c = successor.Kickoff__c.addDays(deadlineShift);
-	                        successor.Deadline__c = successor.Deadline__c.addDays(deadlineShift);
+	                    	if(successor.Kickoff__c != null && successor.Deadline__c != null)
+	                    	{
+	                    		successor.Kickoff__c = successor.Kickoff__c.addDays(deadlineShift);
+	                        	successor.Deadline__c = successor.Deadline__c.addDays(deadlineShift);
+	                    	}	                    	
 	                    }
 	                    successorsToUpdate.addAll(successorMap.get(newRec.Id));
 	                }
