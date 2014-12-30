@@ -104,8 +104,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	                    	{
 	                    		successor.Kickoff__c = successor.Kickoff__c.addDays(deadlineShift);
 	                        	successor.Deadline__c = successor.Deadline__c.addDays(deadlineShift);
-	                    	}
-	                    	
+	                    	}	                    	
 	                    }
 	                    successorsToUpdate.addAll(successorMap.get(newRec.Id));
 	                }
