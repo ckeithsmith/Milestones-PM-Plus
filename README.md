@@ -1,11 +1,11 @@
 <h1>Milestones PM+</h1>
-This is a release of Milestones PM+, a 100% native Salesforce project management application.  The latest managed version of this repository is available for installation via:
+This is a release of Milestones PM+, a 100% FREE & native Salesforce project management application.  The latest managed version of this repository is available for installation via:
  - Sandbox, http://pm-test.passagetech.com
  - Production, http://pm.passagetech.com
 
 For the avoidance of doubt, this particular copy of the software is released under the version 2 of the GNU General Public License. Milestones PM+ is brought to you by Passage Technology.
 
-Copyright (c) 2014, Passage Technology. All rights reserved.
+Copyright (c) 2014-2015, Passage Technology. All rights reserved.
 
 <h2>GPLv2 Disclaimer</h2>
 For the avoidance of doubt, except that if any license choice other than GPL or LGPL is available it will apply instead, 
@@ -13,4 +13,4 @@ Passage Technology elects to use only the General Public License version 2 (GPLv
 
 <h2>More Information</h2>
 For further information about Milestones PM+ or additional documentation, 
-see http://www.passagetechnology.com/salesforce1-pm-accelerators/
+see http://www.passagetechnology.com/mpm-admin-guide/
