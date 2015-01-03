@@ -82,7 +82,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>AllItems</shortDescription>
-        <value>All Items</value>
+        <value>All Projects</value>
     </labels>
     <labels>
         <fullName>Milestone1_AllOpenTasks</fullName>
@@ -215,7 +215,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Milestone1_FilterProjectBy</shortDescription>
-        <value>Filter Project By</value>
+        <value>Filter By Project Status</value>
     </labels>
     <labels>
         <fullName>Milestone1_Friday</fullName>
@@ -586,7 +586,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>MyProjectsAndSubProjectItems</shortDescription>
-        <value>My Projects And Sub-Project Items</value>
+        <value>My Projects</value>
     </labels>
     <labels>
         <fullName>Milestone1_MyTasks</fullName>

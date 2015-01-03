@@ -1,44 +1,65 @@
 <apex:Component controller="Milestone1_repeatCon" id="thePage"> 
-<!--
-Bug # 36
-Modified Date:04-17-2012
-Owner:Persistent
-Comments:Calendar-move between months take a while so Processing pop-up has been added.
- -->
-<c:Milestone1_PopupComponent /> 
+
+<script>
+	function filter() 
+	{
+		filter();
+	}
+</script>
 <apex:form id="theForm">
-<table cellspacing="0" cellpadding="6" border="0">
-    <tr>
-        <td colspan="3">
-            <h1>{!$Label.Milestone1_CalendarLegend}</h1>
-        </td>
-        <td>{!$Label.Milestone1_FilterCalendarBy}: </td>
-        <td><apex:selectList size="1" value="{!filterItem}">
-            <apex:selectOptions value="{!filterList}"/>
-        </apex:selectList></td>
-        <td><apex:commandButton action="{!filter}" value="{!$Label.Milestone1_Filter}" id="FilterButton" /></td>
-        <td><apex:commandLink action="{!fiveDayView}" value="Week"/></td>
-        <td><apex:commandLink action="{!monthView}" value="{!$Label.Milestone1_FullMonth}"/></td>
-    </tr>
-    <!-- Modified Date:03-28-2012 Owner:Persistent Comments: To add an additional project filter. Bug #:66 -->
-    <tr>
-         <td colspan="3">
-         </td>
-         <td>
-            {!$Label.Milestone1_FilterProjectBy}:
-         </td>
-        <td> 
-            <apex:selectList size="1" value="{!selectedProject}">
-                <apex:selectOptions value="{!activeProjectList}"/> 
-            </apex:selectList>
-        </td> 
-    </tr>
-    <tr>
-         <td style="color:maroon">{!$Label.Milestone1_ProjectsCalendar} </td>
-         <td style="color:navy">{!$Label.Milestone1_MilestonesCalendar} </td>
-         <td style="color:green">{!$Label.Milestone1_TasksCalendar} </td>
-    </tr>
- </table>
+<apex:actionFunction name="filter" action="{!filter}" rerender="theCalendar, loadingstatus"/>
+<table cellspacing="0" cellpadding="6" border="0" style="width:100%;">
+	<tr>
+		<td>
+			<table>
+				<tr>
+			       <td colspan="3"></td>
+			       <td>{!$Label.Milestone1_FilterCalendarBy}: </td>
+			       <td>
+			       		<apex:selectList size="1" value="{!filterItem}" onChange="filter()">
+				         <apex:selectOptions value="{!filterList}"/>
+					    </apex:selectList>
+				   </td>
+				   <td><apex:commandLink action="{!fiveDayView}" value="Week" style="margin-left:7px; margin-right:7px;"/></td>
+				   <td><apex:commandLink action="{!monthView}" value="{!$Label.Milestone1_FullMonth}"/></td>
+				 </tr>
+				 <!-- Modified Date:03-28-2012 Owner:Persistent Comments: To add an additional project filter. Bug #:66 -->
+				 <tr>
+				      <td colspan="3" style="text-align:center;">
+				       	
+				       </td>
+				       <td>
+				         {!$Label.Milestone1_FilterProjectBy}: 
+				       </td>
+				       <td> 
+				          <apex:selectList size="1" value="{!projectStatus}" onChange="filter()">
+				              <apex:selectOptions value="{!projectStatusList}"/> 
+				          </apex:selectList>
+				       </td> 
+				 </tr>
+			</table>
+		</td>
+		  
+		<td style="display:block;">
+			<table style="align:right; border-width:0.5px; outline:solid black;">
+				<tr>
+			  	    <td colspan="3" style="text-align:center;">
+			      		<h1 style="font-size:140%;">{!$Label.Milestone1_CalendarLegend}</h1>
+			      	</td>
+				</tr>
+				<tr>
+				    <td style="color:maroon"><span style="background-color:maroon;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b>&nbsp;Project Deadlines</b></td>
+				</tr>
+				<tr>
+				    <td style="color:navy"><span style="background-color:navy;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b>&nbsp;Milestone Deadlines</b></td>
+				</tr>
+				<tr>
+				    <td style="color:green"><span style="background-color:green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span><b>&nbsp;Task Due Dates</b></td>
+				</tr>
+			</table>
+	  </td>  
+	</tr>
+</table>
 <apex:outputPanel id="theCalendar">
 <div class="bCalendar">
 <table class="calendarMonthView" width="100%">
@@ -48,18 +69,16 @@ Modified Date:04-17-2012
 Owner:Persistent
 Comments:Calendar-move between months take a while so Processing pop-up has been added.
 -->
-<apex:actionStatus id="loadingstatus" onStart="openLoadingPopup();" onStop="closeLoadingPopup();"  startText="">
+<apex:actionStatus id="loadingstatus" startText="Loading, Please Wait." stopText="">
 </apex:actionStatus>
 <caption>
-<div class="calHeader"><apex:commandLink action="{!prev}"
-rerender="theCalendar" status="loadingstatus" >
+<div class="calHeader">
 
-<img title="Previous Month" class="prevCalArrow"
-alt="Previous Month" src="/s.gif" />
-
+<apex:commandLink action="{!prev}" style="display:inline-block;" rerender="theCalendar" status="loadingstatus" >
+<img title="Previous Month" class="prevCalArrow" alt="Previous Month" src="/s.gif" />
 </apex:commandLink>
-&nbsp;&nbsp;{!month.monthname}&nbsp;&nbsp;{!month.yearname}&nbsp;&nbsp;
-<apex:commandLink action="{!next}" rerender="theCalendar" status="loadingstatus">
+<h1 style="font-size:200%;">&nbsp;&nbsp;{!month.monthname}&nbsp;&nbsp;{!month.yearname}&nbsp;&nbsp;</h1>
+<apex:commandLink action="{!next}" style="display:inline-block;" rerender="theCalendar" status="loadingstatus">
 <img title="Next Month" class="nextCalArrow" alt="Next Month"
 src="/s.gif" />
 </apex:commandLink></div>
