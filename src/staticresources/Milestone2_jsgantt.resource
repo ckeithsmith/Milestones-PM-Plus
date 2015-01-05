@@ -1257,19 +1257,32 @@ Complete-Displays task percent complete</p>
                   vWeekdayColor = "ffffff";
 
                if(vNxtDate <= vMaxDate) {
-                  vDateRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; HEIGHT: 19px; BORDER-LEFT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center width:'+vColWidth+'px><div style="width: '+vColWidth+'px">' + (vTmpDate.getMonth()+1) + '/' + vTmpDate.getDate() + '</div></td>';
-                  if( vCurrDate >= vTmpDate && vCurrDate < vNxtDate ) 
-                     vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
-                  else
-                     vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid;" align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
+               		if(this.getDateDisplayFormat() == "dd/mm/yyyy"){
+           				vDateRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; HEIGHT: 19px; BORDER-LEFT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center width:'+vColWidth+'px><div style="width: '+vColWidth+'px">' + vTmpDate.getDate() + '/' + (vTmpDate.getMonth()+1) + '</div></td>';
+           			}
 
+	          		else{
+	                	vDateRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; HEIGHT: 19px; BORDER-LEFT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center width:'+vColWidth+'px><div style="width: '+vColWidth+'px">' + (vTmpDate.getMonth()+1) + '/' + vTmpDate.getDate() + '</div></td>';
+	                }
+	                if( vCurrDate >= vTmpDate && vCurrDate < vNxtDate ){
+	                     vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
+	                }
+	                else{
+	                     vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid;" align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
+					}
                } else {
-                  vDateRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; HEIGHT: 19px; BORDER-LEFT: #efefef 1px solid; bgcolor=#' + vWeekdayColor + ' BORDER-RIGHT: #efefef 1px solid;" align=center width:'+vColWidth+'px><div style="width: '+vColWidth+'px">' + (vTmpDate.getMonth()+1) + '/' + vTmpDate.getDate() + '</div></td>';
-                  if( vCurrDate >= vTmpDate && vCurrDate < vNxtDate ) 
-                     vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid; BORDER-RIGHT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
-                  else
-                     vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid; BORDER-RIGHT: #efefef 1px solid;" align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
-
+               		if(this.getDateDisplayFormat() == "dd/mm/yyyy"){
+                  		vDateRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; HEIGHT: 19px; BORDER-LEFT: #efefef 1px solid; bgcolor=#' + vWeekdayColor + ' BORDER-RIGHT: #efefef 1px solid;" align=center width:'+vColWidth+'px><div style="width: '+vColWidth+'px">' + vTmpDate.getDate() + '/' + (vTmpDate.getMonth()+1) + '</div></td>';
+                  	}
+                  	else{	
+                  		vDateRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; HEIGHT: 19px; BORDER-LEFT: #efefef 1px solid; bgcolor=#' + vWeekdayColor + ' BORDER-RIGHT: #efefef 1px solid;" align=center width:'+vColWidth+'px><div style="width: '+vColWidth+'px">' + (vTmpDate.getMonth()+1) + '/' + vTmpDate.getDate() + '</div></td>';
+                  	}
+                  	if( vCurrDate >= vTmpDate && vCurrDate < vNxtDate ){
+                     	vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid; BORDER-RIGHT: #efefef 1px solid;" bgcolor=#' + vWeekdayColor + ' align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
+                  	}
+                  	else{
+                     	vItemRowStr += '<td class="ghead" style="BORDER-TOP: #efefef 1px solid; FONT-SIZE: 12px; BORDER-LEFT: #efefef 1px solid; BORDER-RIGHT: #efefef 1px solid;" align=center><div style="width: '+vColWidth+'px">&nbsp&nbsp</div></td>';
+					}
                }
 
                vTmpDate.setDate(vTmpDate.getDate() + 7);
@@ -1367,33 +1380,47 @@ Complete-Displays task percent complete</p>
             vID = vTaskList[i].getID();
 
             vNumUnits = (vTaskList[i].getEnd() - vTaskList[i].getStart()) / (24 * 60 * 60 * 1000) + 1;
-         if (vFormat=='hour')
-         {
-                vNumUnits = (vTaskList[i].getEnd() - vTaskList[i].getStart()) / (  60 * 1000) + 1;
-         }
-         else if (vFormat=='minute')
-         {
-                vNumUnits = (vTaskList[i].getEnd() - vTaskList[i].getStart()) / (  60 * 1000) + 1;
-         }
+			
+			if (vFormat=='hour')
+			{
+				vNumUnits = (vTaskList[i].getEnd() - vTaskList[i].getStart()) / (  60 * 1000) + 1;
+			}
+			else if (vFormat=='minute')
+			{
+			    vNumUnits = (vTaskList[i].getEnd() - vTaskList[i].getStart()) / (  60 * 1000) + 1;
+			}
          
-           if(vTaskList[i].getVisible() == 0) 
+			if(vTaskList[i].getVisible() == 0) 
                vRightTable += '<DIV id=childgrid_' + vID + ' style="position:relative; display:none;">';
             else
              vRightTable += '<DIV id=childgrid_' + vID + ' style="position:relative">';
             
             if( vTaskList[i].getMile()) {
 
-               vRightTable += '<DIV><TABLE style="position:relative; top:0px; width: ' + vChartWidth + 'px;" cellSpacing=0 cellPadding=0 border=0>' +
-                  '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" onMouseover=' + JSGantt.vGanttVar + '.mouseOver(this,' + vID + ',"right","mile") onMouseout=' + JSGantt.vGanttVar + '.mouseOut(this,' + vID + ',"right","mile")>' + vItemRowStr + '</TR></TABLE></DIV>';
-
-               // Build date string for Title
-               vDateRowStr = JSGantt.formatDateStr(vTaskStart,vDateDisplayFormat);
+			   vRightTable += '<DIV><TABLE style="position:relative; top:0px; width: ' + vChartWidth + 'px;" cellSpacing=0 cellPadding=0 border=0>' +
+			      '<TR id=childrow_' + vID + ' class=yesdisplay style="HEIGHT: 21px" onMouseover=' + JSGantt.vGanttVar + '.mouseOver(this,' + vID + ',"right","mile") onMouseout=' + JSGantt.vGanttVar + '.mouseOut(this,' + vID + ',"right","mile")>' + vItemRowStr + '</TR></TABLE></DIV>';
+			
+			   // Build date string for Title
+			   vDateRowStr = JSGantt.formatDateStr(vTaskStart,vDateDisplayFormat);
 
                vTaskLeft = (Date.parse(vTaskList[i].getStart()) - Date.parse(vMinDate)) / (24 * 60 * 60 * 1000);
                vTaskRight = 1;
+               
+               var offset = -4;
+               
+               if(vFormat == "day" || vFormat == "week")
+               {
+               		offset = 13;
+               }
+               
+               if (vFormat == "quarter")
+               {
+               		offset = -3;
+               }
+
 
                 vRightTable +=                                                                                                                          
-                  '<div id=bardiv_' + vID + ' style="position:absolute; top:0px; left:' + Math.ceil((vTaskLeft * (vDayWidth) + 1)) + 'px; height: 18px; overflow:hidden;">' +
+                  '<div id=bardiv_' + vID + ' style="position:absolute; top:0px; left:' + Math.ceil((vTaskLeft * (vDayWidth) + offset)) + 'px; height: 18px; overflow:hidden;">' +
                   '  <div id=taskbar_' + vID + ' title="' + vTaskList[i].getName() + ': ' + vDateRowStr + '" style="height: 23px; width:9px; overflow:hidden; cursor: pointer;" onclick=JSGantt.taskLink("' + vTaskList[i].getLink() + '",300,200);>';
                
                if(vTaskList[i].getCompVal() < 100)
@@ -1479,7 +1506,7 @@ Complete-Displays task percent complete</p>
                   vRightTable += vDivStr;
                   
                   // Draw Task Bar  which has outer DIV with enclosed colored bar div, and opaque completion div
-              vRightTable +=
+              	  vRightTable +=
                      '<div id=bardiv_' + vID + ' style="position:absolute; top:4px; left:' + Math.ceil(vTaskLeft * (vDayWidth) + 1) + 'px; height:18px; width:' + Math.ceil((vTaskRight) * (vDayWidth) - 1) + 'px">' +
                         '<div id=taskbar_' + vID + ' title="' + vTaskList[i].getName() + ': ' + vDateRowStr + '" class=gtask style="background-color:#' + vTaskList[i].getColor() +'; height: 13px; width:' + ((Math.ceil((vTaskRight) * (vDayWidth) - 1) > 0 ) ? Math.ceil((vTaskRight) * (vDayWidth) - 1) : 2)
                          + 'px; cursor: pointer;opacity:0.9;" ' +

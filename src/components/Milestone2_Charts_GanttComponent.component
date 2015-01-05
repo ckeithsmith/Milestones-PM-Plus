@@ -28,6 +28,8 @@
         g.setShowRes(0); // Show/Hide Responsible (1/0)
         g.setShowDur(0); // Show/Hide Duration (1/0)
         g.setShowComp(0); // Show/Hide % Complete(1/0)
+		g.setDateInputFormat("mm/dd/yyyy")
+		g.setDateDisplayFormat("{! userDateFormat }");
         
         <apex:outputText rendered="{! (myOptions != null) }">
             g.setFormatArr("{! myOptions }");
