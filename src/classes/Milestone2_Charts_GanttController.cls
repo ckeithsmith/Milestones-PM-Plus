@@ -25,7 +25,7 @@ public with sharing class Milestone2_Charts_GanttController {
     public List<List<String>> taskItems {get;set;}
     public List<List<String>> childTaskItems {get;set;}
     
-    public Map<String, String> localeMap = createLocaleMap();
+    public Map<String, String> localeMap = new Map<String, String>();
     public String userDateFormat {get; set;}
     
   
@@ -40,7 +40,6 @@ public with sharing class Milestone2_Charts_GanttController {
     private String filterFieldName;
     private String predecessor;
 
-    /////////////////////////////////////
     public String childObjectType {get;set;}
     public String childStartDateFieldName {get;set;}
     public String childEndDateFieldName {get;set;}
@@ -51,7 +50,6 @@ public with sharing class Milestone2_Charts_GanttController {
     private String childCompletedFieldName;
     private String childFilterFieldName;
     private String childPredecessor;
-    /////////////////////////////////////
   
     public List<Sobject> sObjectList {get; set;}
     public List<Sobject> childsObjectList {get; set;}
@@ -63,6 +61,16 @@ public with sharing class Milestone2_Charts_GanttController {
     
     public void init()
     {
+    	
+    	localeMap = createLocaleMap();
+    	
+    	if(localeMap.get(UserInfo.getLocale()) != null){
+    		userDateFormat = localeMap.get(UserInfo.getLocale()).toLowerCase();
+    	}
+    	else{
+    		userDateFormat = 'yyyy-mm-dd';
+    	}
+    	
     	childTaskItems = new List<List<String>>();
         if (myTarget != null)
         {
@@ -190,16 +198,16 @@ public with sharing class Milestone2_Charts_GanttController {
             }else{
                 startDate = Date.valueOf(current.get(startDateFieldName));
             }
-            //sDateString = startDate.month() + '/' + startDate.day() + '/' + startDate.year();
-            sDateString = startDate.format();
+
+            sDateString = startDate.month() + '/' + startDate.day() + '/' + startDate.year();
             
             if(current.get(endDateFieldName) == null){
                 endDate = startDate;
             }else{
                 endDate = Date.valueOf(current.get(endDateFieldName));
             }
-            //eDateString = endDate.month() + '/' + endDate.day() + '/' + endDate.year();
-            eDateString = endDate.format();
+
+            eDateString = endDate.month() + '/' + endDate.day() + '/' + endDate.year();
             
 			if(current.get(completedFieldName) == true)
                 completed = 1;
@@ -279,16 +287,16 @@ pCaption: optional caption that will be added after task bar if CaptionType set 
             }else{
                 startDate = Date.valueOf(current.get(childstartDateFieldName));
             }
-            //sDateString = startDate.month() + '/' + startDate.day() + '/' + startDate.year();
-            sDateString = startDate.format();
+
+            sDateString = startDate.month() + '/' + startDate.day() + '/' + startDate.year();
             
             if(current.get(childendDateFieldName) == null){
                 endDate = startDate;
             }else{
                 endDate = Date.valueOf(current.get(childendDateFieldName));
             }
-            //eDateString = endDate.month() + '/' + endDate.day() + '/' + endDate.year();
-            eDateString = endDate.format();
+
+            eDateString = endDate.month() + '/' + endDate.day() + '/' + endDate.year();
             
             if(current.get(childcompletedFieldName) == true)
                 completed = 1;
@@ -333,123 +341,118 @@ pCaption: optional caption that will be added after task bar if CaptionType set 
     private Map<String, String> createLocaleMap() 
     {
 	    Map<String, String> locale_map = new Map<String, String>(); //holds the locale to timedate formats
-	    locale_map.put('ar', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('ar_AE', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('ar_BH', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('ar_JO', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('ar_KW', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('ar_LB', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('ar_SA', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('bg_BG', 'yyyy-M-d H:mm');
-	    locale_map.put('ca', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('ca_ES', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('ca_ES_EURO', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('cs', 'd.M.yyyy H:mm');
-	    locale_map.put('cs_CZ', 'd.M.yyyy H:mm');
-	    locale_map.put('da', 'dd-MM-yyyy HH:mm');
-	    locale_map.put('da_DK', 'dd-MM-yyyy HH:mm');
-	    locale_map.put('de', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_AT', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_AT_EURO', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_CH', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_DE', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_DE_EURO', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_LU', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('de_LU_EURO', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('el_GR', 'd/M/yyyy h:mm a');
-	    locale_map.put('en_AU', 'd/MM/yyyy HH:mm');
-	    locale_map.put('en_B', 'M/d/yyyy h:mm a');
-	    locale_map.put('en_BM', 'M/d/yyyy h:mm a');
-	    locale_map.put('en_CA', 'dd/MM/yyyy h:mm a');
-	    locale_map.put('en_GB', 'dd/MM/yyyy');
-	    locale_map.put('en_GH', 'M/d/yyyy h:mm a');
-	    locale_map.put('en_ID', 'M/d/yyyy h:mm a');
-	    locale_map.put('en_IE', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('en_IE_EURO', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('en_NZ', 'd/MM/yyyy HH:mm');
-	    locale_map.put('en_SG', 'M/d/yyyy h:mm a');
-	    locale_map.put('en_US', 'M/d/yyyy');
-	    locale_map.put('en_ZA', 'yyyy/MM/dd hh:mm a');
-	    locale_map.put('es', 'd/MM/yyyy H:mm');
-	    locale_map.put('es_AR', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('es_BO', 'dd-MM-yyyy hh:mm a');
-	    locale_map.put('es_CL', 'dd-MM-yyyy hh:mm a');
-	    locale_map.put('es_CO', 'd/MM/yyyy hh:mm a');
-	    locale_map.put('es_CR', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('es_EC', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('es_ES', 'd/MM/yyyy H:mm');
-	    locale_map.put('es_ES_EURO', 'd/MM/yyyy H:mm');
-	    locale_map.put('es_GT', 'd/MM/yyyy hh:mm a');
-	    locale_map.put('es_HN', 'MM-dd-yyyy hh:mm a');
-	    locale_map.put('es_MX', 'd/MM/yyyy hh:mm a');
-	    locale_map.put('es_PE', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('es_PR', 'MM-dd-yyyy hh:mm a');
-	    locale_map.put('es_PY', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('es_SV', 'MM-dd-yyyy hh:mm a');
-	    locale_map.put('es_UY', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('es_VE', 'dd/MM/yyyy hh:mm a');
-	    locale_map.put('et_EE', 'd.MM.yyyy H:mm');
-	    locale_map.put('fi', 'd.M.yyyy H:mm');
-	    locale_map.put('fi_FI', 'd.M.yyyy H:mm');
-	    locale_map.put('fi_FI_EURO', 'd.M.yyyy H:mm');
-	    locale_map.put('fr', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('fr_BE', 'd/MM/yyyy H:mm');
-	    locale_map.put('fr_CA', 'yyyy-MM-dd HH:mm');
-	    locale_map.put('fr_CH', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('fr_FR', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('fr_FR_EURO', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('fr_LU', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('fr_MC', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('hr_HR', 'yyyy.MM.dd HH:mm');
-	    locale_map.put('hu', 'yyyy.MM.dd. H:mm');
-	    locale_map.put('hy_AM', 'M/d/yyyy h:mm a');
-	    locale_map.put('is_IS', 'd.M.yyyy HH:mm');
-	    locale_map.put('it', 'dd/MM/yyyy H.mm');
-	    locale_map.put('it_CH', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('it_IT', 'dd/MM/yyyy H.mm');
-	    locale_map.put('iw', 'HH:mm dd/MM/yyyy');
-	    locale_map.put('iw_IL', 'HH:mm dd/MM/yyyy');
-	    locale_map.put('ja', 'yyyy/MM/dd H:mm');
-	    locale_map.put('ja_JP', 'yyyy/MM/dd H:mm');
-	    locale_map.put('kk_KZ', 'M/d/yyyy h:mm a');
-	    locale_map.put('km_KH', 'M/d/yyyy h:mm a');
-	    locale_map.put('ko', 'yyyy. M. d a h:mm');
-	    locale_map.put('ko_KR', 'yyyy. M. d a h:mm');
-	    locale_map.put('lt_LT', 'yyyy.M.d HH.mm');
-	    locale_map.put('lv_LV', 'yyyy.d.M HH:mm');
-	    locale_map.put('ms_MY', 'dd/MM/yyyy h:mm a');
-	    locale_map.put('nl', 'd-M-yyyy H:mm');
-	    locale_map.put('nl_BE', 'd/MM/yyyy H:mm');
-	    locale_map.put('nl_NL', 'd-M-yyyy H:mm');
-	    locale_map.put('nl_SR', 'd-M-yyyy H:mm');
-	    locale_map.put('no', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('no_NO', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('pl', 'yyyy-MM-dd HH:mm');
-	    locale_map.put('pt', 'dd-MM-yyyy H:mm');
-	    locale_map.put('pt_AO', 'dd-MM-yyyy H:mm');
-	    locale_map.put('pt_BR', 'dd/MM/yyyy HH:mm');
-	    locale_map.put('pt_PT', 'dd-MM-yyyy H:mm');
-	    locale_map.put('ro_RO', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('ru', 'dd.MM.yyyy H:mm');
-	    locale_map.put('sk_SK', 'd.M.yyyy H:mm');
-	    locale_map.put('sl_SI', 'd.M.y H:mm');
-	    locale_map.put('sv', 'yyyy-MM-dd HH:mm');
-	    locale_map.put('sv_SE', 'yyyy-MM-dd HH:mm');
-	    locale_map.put('th', 'M/d/yyyy h:mm a');
-	    locale_map.put('th_TH', 'd/M/yyyy, H:mm ?.');
-	    locale_map.put('tr', 'dd.MM.yyyy HH:mm');
-	    locale_map.put('ur_PK', 'M/d/yyyy h:mm a');
-	    locale_map.put('vi_VN', 'HH:mm dd/MM/yyyy');
-	    locale_map.put('zh', 'yyyy-M-d ah:mm');
-	    locale_map.put('zh_CN', 'yyyy-M-d ah:mm');
-	    locale_map.put('zh_HK', 'yyyy-M-d ah:mm');
-	    locale_map.put('zh_TW', 'yyyy/M/d a h:mm');
+	    locale_map.put('ar', 'dd/mm/yyyy');
+	    locale_map.put('ar_AE', 'dd/mm/yyyy');
+	    locale_map.put('ar_BH', 'dd/mm/yyyy');
+	    locale_map.put('ar_JO', 'dd/mm/yyyy');
+	    locale_map.put('ar_KW', 'dd/mm/yyyy');
+	    locale_map.put('ar_LB', 'dd/mm/yyyy');
+	    locale_map.put('ar_SA', 'dd/mm/yyyy');
+	    locale_map.put('bg_BG', 'yyyy-mm-dd');
+	    locale_map.put('ca', 'dd/mm/yyyy');
+	    locale_map.put('ca_ES', 'dd/mm/yyyy');
+	    locale_map.put('ca_ES_EURO', 'dd/mm/yyyy');
+	    locale_map.put('cs', 'dd/mm/yyyy');
+	    locale_map.put('cs_CZ', 'dd/mm/yyyy');
+	    locale_map.put('da', 'dd/mm/yyyy');
+	    locale_map.put('da_DK', 'dd/mm/yyyy');
+	    locale_map.put('de', 'dd/mm/yyyy');
+	    locale_map.put('de_AT', 'dd/mm/yyyy');
+	    locale_map.put('de_AT_EURO', 'dd/mm/yyyy');
+	    locale_map.put('de_CH', 'dd/mm/yyyy');
+	    locale_map.put('de_DE', 'dd/mm/yyyy');
+	    locale_map.put('de_DE_EURO', 'dd/mm/yyyy');
+	    locale_map.put('de_LU', 'dd/mm/yyyy');
+	    locale_map.put('de_LU_EURO', 'dd/mm/yyyy');
+	    locale_map.put('el_GR', 'dd/mm/yyyy');
+	    locale_map.put('en_AU', 'dd/mm/yyyy');
+	    locale_map.put('en_B', 'mm/dd/yyyy');
+	    locale_map.put('en_BM', 'mm/dd/yyyy');
+	    locale_map.put('en_CA', 'dd/mm/yyyy');
+	    locale_map.put('en_GB', 'dd/mm/yyyy');
+	    locale_map.put('en_GH', 'mm/dd/yyyy');
+	    locale_map.put('en_ID', 'mm/dd/yyyy');
+	    locale_map.put('en_IE', 'dd/mm/yyyy');
+	    locale_map.put('en_IE_EURO', 'dd/mm/yyyy');
+	    locale_map.put('en_NZ', 'dd/mm/yyyy');
+	    locale_map.put('en_SG', 'mm/dd/yyyy');
+	    locale_map.put('en_US', 'mm/dd/yyyy');
+	    locale_map.put('en_ZA', 'yyyy-mm-dd');
+	    locale_map.put('es', 'dd/mm/yyyy');
+	    locale_map.put('es_AR', 'dd/mm/yyyy');
+	    locale_map.put('es_BO', 'dd/mm/yyyy');
+	    locale_map.put('es_CL', 'dd/mm/yyyy');
+	    locale_map.put('es_CO', 'dd/mm/yyyy');
+	    locale_map.put('es_CR', 'dd/mm/yyyy');
+	    locale_map.put('es_EC', 'dd/mm/yyyy');
+	    locale_map.put('es_ES', 'dd/mm/yyyy');
+	    locale_map.put('es_ES_EURO', 'dd/mm/yyyy');
+	    locale_map.put('es_GT', 'dd/mm/yyyy');
+	    locale_map.put('es_HN', 'mm/dd/yyyy');
+	    locale_map.put('es_MX', 'dd/mm/yyyy');
+	    locale_map.put('es_PE', 'dd/mm/yyyy');
+	    locale_map.put('es_PR', 'mm/dd/yyyy');
+	    locale_map.put('es_PY', 'dd/mm/yyyy');
+	    locale_map.put('es_SV', 'mm/dd/yyyy');
+	    locale_map.put('es_UY', 'dd/mm/yyyy');
+	    locale_map.put('es_VE', 'dd/mm/yyyy');
+	    locale_map.put('et_EE', 'dd/mm/yyyy');
+	    locale_map.put('fi', 'dd/mm/yyyy');
+	    locale_map.put('fi_FI', 'dd/mm/yyyy');
+	    locale_map.put('fi_FI_EURO', 'dd/mm/yyyy');
+	    locale_map.put('fr', 'dd/mm/yyyy');
+	    locale_map.put('fr_BE', 'dd/mm/yyyy');
+	    locale_map.put('fr_CA', 'yyyy-mm-dd');
+	    locale_map.put('fr_CH', 'dd/mm/yyyy');
+	    locale_map.put('fr_FR', 'dd/mm/yyyy');
+	    locale_map.put('fr_FR_EURO', 'dd/mm/yyyy');
+	    locale_map.put('fr_LU', 'dd/mm/yyyy');
+	    locale_map.put('fr_MC', 'dd/mm/yyyy');
+	    locale_map.put('hr_HR', 'yyyy-mm-dd');
+	    locale_map.put('hu', 'yyyy-mm-dd');
+	    locale_map.put('hy_AM', 'mm/dd/yyyy');
+	    locale_map.put('is_IS', 'dd/mm/yyyy');
+	    locale_map.put('it', 'dd/mm/yyyy');
+	    locale_map.put('it_CH', 'dd/mm/yyyy');
+	    locale_map.put('it_IT', 'dd/mm/yyyy');
+	    locale_map.put('iw', 'dd/mm/yyyy');
+	    locale_map.put('iw_IL', 'dd/mm/yyyy');
+	    locale_map.put('ja', 'yyyy-mm-dd');
+	    locale_map.put('ja_JP', 'yyyy-mm-dd');
+	    locale_map.put('kk_KZ', 'mm/dd/yyyy');
+	    locale_map.put('km_KH', 'mm/dd/yyyy');
+	    locale_map.put('ko', 'yyyy-mm-dd');
+	    locale_map.put('ko_KR', 'yyyy-mm-dd');
+	    locale_map.put('lt_LT', 'yyyy-mm-dd');
+	    locale_map.put('lv_LV', 'yyyy-mm-dd');
+	    locale_map.put('ms_MY', 'dd/mm/yyyy');
+	    locale_map.put('nl', 'dd/mm/yyyy');
+	    locale_map.put('nl_BE', 'dd/mm/yyyy');
+	    locale_map.put('nl_NL', 'dd/mm/yyyy');
+	    locale_map.put('nl_SR', 'dd/mm/yyyy');
+	    locale_map.put('no', 'dd/mm/yyyy');
+	    locale_map.put('no_NO', 'dd/mm/yyyy');
+	    locale_map.put('pl', 'yyyy-mm-dd');
+	    locale_map.put('pt', 'dd/mm/yyyy');
+	    locale_map.put('pt_AO', 'dd/mm/yyyy');
+	    locale_map.put('pt_BR', 'dd/mm/yyyy');
+	    locale_map.put('pt_PT', 'dd/mm/yyyy');
+	    locale_map.put('ro_RO', 'dd/mm/yyyy');
+	    locale_map.put('ru', 'dd/mm/yyyy');
+	    locale_map.put('sk_SK', 'dd/mm/yyyy');
+	    locale_map.put('sl_SI', 'dd/mm/yyyy');
+	    locale_map.put('sv', 'yyyy-mm-dd');
+	    locale_map.put('sv_SE', 'yyyy-mm-dd');
+	    locale_map.put('th', 'mm/dd/yyyy');
+	    locale_map.put('th_TH', 'dd/mm/yyyy');
+	    locale_map.put('tr', 'dd/mm/yyyy');
+	    locale_map.put('ur_PK', 'mm/dd/yyyy');
+	    locale_map.put('vi_VN', 'dd/mm/yyyy');
+	    locale_map.put('zh', 'yyyy-mm-dd');
+	    locale_map.put('zh_CN', 'yyyy-mm-dd');
+	    locale_map.put('zh_HK', 'yyyy-mm-dd');
+	    locale_map.put('zh_TW', 'yyyy-mm-dd');
 	    return locale_map; //return the map
-	}
-	
-	public String getUserDateFormat()
-	{
-		return localeMap.get(UserInfo.getLocale()).toLowerCase();
 	}
 
 }
