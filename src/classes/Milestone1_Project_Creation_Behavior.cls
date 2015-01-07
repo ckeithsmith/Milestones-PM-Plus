@@ -18,7 +18,11 @@ ShouldCascadeBackwardDateShift -    GIVEN an existing project,
 									
 ShouldAllowNonAdminUsersToCreateProjects - GIVEN an object that needs a project to be created,
 										   WHEN the required fields are populated and the user triggering the automated project creation is not an admin,
-										   THEN the project should successfully be created. 									
+										   THEN the project should successfully be created. 
+										   
+shouldCascadeForwardDateShiftToSuccessorMilestones - GIVEN a project is imported through the automated project creation
+													 WHEN the milestones are shifted
+													 THEN the successor milestones should be shifted correctly.									
 
 *******************************************************************************************************/
 
@@ -41,20 +45,21 @@ public class Milestone1_Project_Creation_Behavior {
         );
     private static Milestone1_Project__c testProject = Milestone1_Test_Utility.sampleProject('Closed Won' + System.now());
     private static Milestone1_Project__c testProject2 = Milestone1_Test_Utility.sampleProject('test2' + System.now());
+    private static Milestone1_Milestone__c testMilestone = new Milestone1_Milestone__c();
+    private static Milestone1_Milestone__c testMilestone2 = new Milestone1_Milestone__c();
     
     static {
     	
     	testProject.Kickoff__c = date.today().addDays(-5);
         testProject.Deadline__c = date.today();
         insert testProject;
-
-         
-        Milestone1_Milestone__c testMilestone = Milestone1_Test_Utility.sampleMilestone(testProject.Id,null,'Milestone 1' + System.now());
+		
+		testMilestone = Milestone1_Test_Utility.sampleMilestone(testProject.Id,null,'Milestone 1' + System.now());
         testMilestone.Kickoff__c = date.today().addDays(-5);
         testMilestone.Deadline__c = date.today();
         insert testMilestone;
         
-        Milestone1_Milestone__c testMilestone2 = Milestone1_Test_Utility.sampleMilestone(testProject.Id,null,'Milestone 2' + System.now());
+        testMilestone2 = Milestone1_Test_Utility.sampleMilestone(testProject.Id,null,'Milestone 2' + System.now());
         testMilestone2.Kickoff__c = date.today().addDays(-5);
         testMilestone2.Deadline__c = date.today();
         insert testMilestone2;
@@ -515,6 +520,71 @@ public class Milestone1_Project_Creation_Behavior {
         }
         system.assertEquals(12, tasks.size());
         
+    }
+    
+   
+    static testmethod void shouldCascadeForwardDateShiftToSuccessorMilestones(){
+    	
+    	Milestone1_Project__c proj = new Milestone1_Project__c();
+    	Milestone1_Milestone__c milestone1 = new Milestone1_Milestone__c();
+    	Milestone1_Milestone__c milestone2 = new Milestone1_Milestone__c();
+        list<Milestone1_Task__c> Tasks = new list<Milestone1_Task__c>();
+        Milestone1_Project_Creation_Utility projCreationUtil = new Milestone1_Project_Creation_Utility();
+        map<id, sObject> oldMap = new map<id, sObject>();
+        map<id, sObject> newMap = new map<id, sObject>();
+        
+        testProject.deadline__c = date.today().addDays(5);
+        update testProject;
+        
+        testMilestone2.Predecessor_Milestone__c = testmilestone.id;
+        testMilestone2.kickoff__c = date.today();
+        testMilestone2.deadline__c = date.today().addDays(5);
+        update testMilestone2;
+       
+        Milestone1_Export_Project_Controller controller = new Milestone1_Export_Project_Controller(new ApexPages.StandardController(testProject));
+        controller.createExportXML();
+        
+        Document doc = [Select Name, Id, Body, ContentType From Document];
+        doc.Name = 'Closed Won';
+        doc.AuthorId = UserInfo.getUserId();
+        doc.FolderId = UserInfo.getUserId();
+        upsert doc;
+    
+        insert acc; 
+
+        opp.AccountId = acc.Id;
+        insert opp;
+
+        oldOpp.AccountId = acc.Id;
+        insert oldOpp;
+        oldMap = new map<id, sObject>{opp.Id => oldOpp};        
+        
+        opp.StageName = 'Closed Won';
+        update opp;
+        opp = [select StageName, AccountId, Name from Opportunity where id =:opp.Id];
+        newMap = new map<id, sObject>{opp.Id => opp};
+        
+        test.starttest();
+        projCreationUtil.CreateChildProject(oldMap, newMap, new Map<string, object>{'projectCreationField' => 'StageName', 'projectLookupField1' => 'Opportunity__c', 'projectLookupField2' => 'Account__c', 'secondaryLookup' => 'AccountId', 'projectNamingConventionField' => 'Name'});
+        test.stoptest();
+        
+        list<Milestone1_Project__c> projList = [select id, Name from Milestone1_Project__c where Opportunity__c = :opp.Id];
+        system.assertequals(1, projList.Size());
+        
+        proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+        system.assert(proj != null, 'Did not insert Project');
+        system.assertequals(date.today(),  proj.KickOff__c);
+        system.assertequals(date.today().addDays(10), proj.Deadline__c);
+        
+        milestone1 = [select id, KickOff__c, Deadline__c from Milestone1_Milestone__c where Project__c = :proj.Id and Predecessor_Milestone__c = null limit 1];
+        system.assertequals(date.today(), milestone1.KickOff__c);
+        system.assertequals(date.today().addDays(5), milestone1.Deadline__c);
+        
+        milestone2 = [select id, KickOff__c, Deadline__c from Milestone1_Milestone__c where Project__c = :proj.Id and Predecessor_Milestone__c = :milestone1.Id limit 1];
+        system.assertequals(date.today().addDays(5), milestone2.KickOff__c);
+        system.assertequals(date.today().addDays(10), milestone2.Deadline__c);
+ 
+    	
     }
     
 /****************************************/
