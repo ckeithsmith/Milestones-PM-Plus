@@ -205,7 +205,7 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     
     public static void shiftProjectsMilestones(map<Id, integer> shiftMap){
     	
-    	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT Kickoff__c, Deadline__c, Project__c 
+    	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT Kickoff__c, Deadline__c, Project__c
     														from Milestone1_Milestone__c 
     														where Project__c IN :shiftMap.keySet() and Kickoff__c != null and Deadline__c != null];
     	integer daysToShift;
@@ -215,9 +215,7 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     		if(shiftMap.get(ms.Project__c) != null){
 	    		daysToShift = shiftMap.get(ms.Project__c);
 	    		ms.Kickoff__c += daysToShift;
-	    		ms.Deadline__c += daysToShift;
-	    		//set flag that states updates being done are in the project trigger context
-//	    		ms.Project_Creation_Context__c = true; 
+	    		ms.Deadline__c += daysToShift; 
     		}
     		
     	}
