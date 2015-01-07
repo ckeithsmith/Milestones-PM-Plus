@@ -207,7 +207,7 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     	
     	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT Kickoff__c, Deadline__c, Project__c
     														from Milestone1_Milestone__c 
-    														where Project__c IN :shiftMap.keySet() and Kickoff__c != null and Deadline__c != null];
+    														where Project__c IN :shiftMap.keySet() and Kickoff__c != null and Deadline__c != null and Predecessor_Milestone__c = null];
     	integer daysToShift;
     	
     	for(Milestone1_Milestone__c ms : MilestonesToUpdate){

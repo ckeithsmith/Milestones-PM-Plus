@@ -24,6 +24,10 @@ shouldCascadeForwardDateShiftToSuccessorMilestones - GIVEN a project is imported
 													 WHEN the milestones are shifted
 													 THEN the successor milestones should be shifted correctly.									
 
+shouldCascadeMilestoneDateShiftToSuccessorsOnExistingProject - GIVEN a project has already been automatically created
+															   WHEN the project is shifted again
+															   THEN the successor milestones should be shifted correctly.
+
 *******************************************************************************************************/
 
 
@@ -583,8 +587,49 @@ public class Milestone1_Project_Creation_Behavior {
         milestone2 = [select id, KickOff__c, Deadline__c from Milestone1_Milestone__c where Project__c = :proj.Id and Predecessor_Milestone__c = :milestone1.Id limit 1];
         system.assertequals(date.today().addDays(5), milestone2.KickOff__c);
         system.assertequals(date.today().addDays(10), milestone2.Deadline__c);
- 
+
+    }
+    
+    static testmethod void shouldCascadeMilestoneDateShiftToSuccessorsOnExistingProject(){
     	
+    	Milestone1_Project__c proj = new Milestone1_Project__c();
+    	Milestone1_Milestone__c milestone1 = new Milestone1_Milestone__c();
+    	Milestone1_Milestone__c milestone2 = new Milestone1_Milestone__c();
+        list<Milestone1_Task__c> Tasks = new list<Milestone1_Task__c>();
+        Milestone1_Project_Creation_Utility projCreationUtil = new Milestone1_Project_Creation_Utility();
+        map<id, sObject> oldMap = new map<id, sObject>();
+        map<id, sObject> newMap = new map<id, sObject>();
+        
+        testMilestone2.Predecessor_Milestone__c = testmilestone.id;
+        testMilestone2.kickoff__c = date.today();
+        testMilestone2.deadline__c = date.today().addDays(5);
+        update testMilestone2;
+
+        Milestone1_Export_Project_Controller controller = new Milestone1_Export_Project_Controller(new ApexPages.StandardController(testProject));
+        controller.createExportXML();
+        
+        Document doc = [Select Name, Id, Body, ContentType From Document];
+        doc.Name = 'Closed Won';
+        doc.AuthorId = UserInfo.getUserId();
+        doc.FolderId = UserInfo.getUserId();
+        upsert doc;
+        
+        proj = [select id, Name, Kickoff__c, Deadline__c from Milestone1_Project__c where Opportunity__c = :opp.Id limit 1];
+    	
+    	test.startTest();
+    	proj.Kickoff__c = date.today().addDays(31);
+        proj.Deadline__c = date.today().addDays(41);
+		update proj;
+		test.stopTest();
+        
+        milestone1 = [select id, KickOff__c, Deadline__c from Milestone1_Milestone__c where Project__c = :proj.Id and Predecessor_Milestone__c = null limit 1];
+        system.assertequals(date.today().addDays(31), milestone1.KickOff__c);
+        system.assertequals(date.today().addDays(36), milestone1.Deadline__c);
+        
+        milestone2 = [select id, KickOff__c, Deadline__c from Milestone1_Milestone__c where Project__c = :proj.Id and Predecessor_Milestone__c = :milestone1.Id limit 1];
+        system.assertequals(date.today().addDays(36), milestone2.KickOff__c);
+        system.assertequals(date.today().addDays(41), milestone2.Deadline__c);
+ 
     }
     
 /****************************************/
