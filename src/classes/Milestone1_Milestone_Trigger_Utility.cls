@@ -63,7 +63,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
         for(Milestone1_Milestone__c newRec : newMap.values()){
             Milestone1_Milestone__c oldRec = oldMap.get(newRec.Id);
             
-            if(oldRec.Project_Creation_Context__c == true && newRec.Predecessor_Milestone__c == null){
+            if(oldRec.Project_Creation_Context__c == true){
             	newRec.Project_Creation_Context__c = false;
             }
             
@@ -102,13 +102,8 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	                    for(Milestone1_Milestone__c successor: successorMap.get(newRec.Id)) {
 	                    	if(successor.Kickoff__c != null && successor.Deadline__c != null)
 	                    	{
-	                    		if(successor.Project_Creation_Context__c == false){
 	                    		successor.Kickoff__c = successor.Kickoff__c.addDays(deadlineShift);
 	                        	successor.Deadline__c = successor.Deadline__c.addDays(deadlineShift);
-	                    		}
-	                    		else{
-	                    			successor.Project_Creation_Context__c = false;
-	                    		}
 	                    	}	                    	
 	                    }
 	                    successorsToUpdate.addAll(successorMap.get(newRec.Id));
