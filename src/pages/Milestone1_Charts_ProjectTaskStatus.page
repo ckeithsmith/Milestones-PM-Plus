@@ -48,7 +48,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       function drawChart() {
 	
 	        if ({!Milestone1_Project__c.Total_Open_Task_Count__c == 0} && {!Milestone1_Project__c.Total_Complete_Task_Count__c == 0}) {
-        		document.getElementById("chart_div0").innerHTML = "Please add some tasks to this project to display task analysis charts.";
+        		document.getElementById("chart_div0").innerHTML = "{!JSENCODE("Please add some tasks to this project to display task analysis charts")}";
         		
         	} else {
         		data = new google.visualization.DataTable();
