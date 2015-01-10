@@ -631,6 +631,18 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
+        <fullName>Project_Report</fullName>
+        <availability>online</availability>
+        <description>A link to the project report.</description>
+        <displayType>button</displayType>
+        <encodingKey>UTF-8</encodingKey>
+        <linkType>url</linkType>
+        <masterLabel>Project Report</masterLabel>
+        <openType>replace</openType>
+        <protected>false</protected>
+        <url>/00Oj0000002XLAr?pv0={!Milestone1_Project__c.Id}</url>
+    </webLinks>
+    <webLinks>
         <fullName>Update</fullName>
         <availability>online</availability>
         <description>Updates current project data</description>
