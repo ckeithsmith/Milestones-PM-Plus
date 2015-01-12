@@ -12,7 +12,7 @@
         <outerJoin>false</outerJoin>
         <relationship>Project_Milestones__r</relationship>
     </join>
-    <label>Projects with Milestones with Tasks</label>
+    <label>Projects with Milestones and Tasks</label>
     <sections>
         <columns>
             <checkedByDefault>false</checkedByDefault>

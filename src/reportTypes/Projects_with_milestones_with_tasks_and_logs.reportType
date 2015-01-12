@@ -16,7 +16,7 @@
         <outerJoin>false</outerJoin>
         <relationship>Project_Milestones__r</relationship>
     </join>
-    <label>Projects with Milestones with Tasks and Logs</label>
+    <label>Projects with Milestones, Tasks, and Logs</label>
     <sections>
         <columns>
             <checkedByDefault>false</checkedByDefault>
