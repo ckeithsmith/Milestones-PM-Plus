@@ -1,0 +1,1 @@
+<apex:page controller="Milestone1_Report_Handler" action="{!redirectToProjectReport}"/>
