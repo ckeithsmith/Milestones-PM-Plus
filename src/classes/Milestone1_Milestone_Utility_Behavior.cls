@@ -51,4 +51,56 @@ public class Milestone1_Milestone_Utility_Behavior {
 	 	
 	 }
 
+	/***************************************************************************************
+	
+	shouldMarkMilestoneComplete - Given a parent milestone, WHEN all of the child task have
+								  been marked complete, THEN the milestone should be marked
+								  complete as well.
+	
+	****************************************************************************************/
+	static testmethod void shouldMarkMilestoneComplete() 
+	{
+		Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(testMilestone.id);
+		Milestone1_Task__c task2 = Milestone1_Test_Utility.sampleTask(testMilestone.id);
+		
+		insert task1;
+		insert task2;
+		
+		task1.complete__c = true;
+		task2.complete__c = true;
+		
+		update task1;
+		update task2;
+		
+		testMilestone = [SELECT complete__c FROM Milestone1_Milestone__c WHERE id = :testMilestone.id];
+		
+		System.assertEquals(true, testMilestone.complete__c);		
+	}
+	
+	/***************************************************************************************
+	
+	shouldMarkTasksComplete - Given a milestone with tasks, WHEN the parent milestone has
+							 been marked complete, THEN all child tasks should be marked
+							 complete as well.
+	
+	****************************************************************************************/
+	static testmethod void shouldMarkTasksComplete() 
+	{
+		Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(testMilestone.id);
+		Milestone1_Task__c task2 = Milestone1_Test_Utility.sampleTask(testMilestone.id);
+		
+		insert task1;
+		insert task2;
+		
+		testMilestone.complete__c = true;
+		
+		update testMilestone;
+		
+		task1 = [SELECT complete__c FROM Milestone1_Task__c WHERE id = :task1.id];
+		task2 = [SELECT complete__c FROM Milestone1_Task__c WHERE id = :task2.id];
+		
+		System.assertEquals(true, task1.complete__c);
+		System.assertEquals(true, task2.complete__c);
+	}
+
 }
