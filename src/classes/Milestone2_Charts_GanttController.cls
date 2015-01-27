@@ -59,6 +59,8 @@ public with sharing class Milestone2_Charts_GanttController {
     public static final String COLOR_FUTURE = '666666'; //Light Grey
     public static final String COLOR_CURRENT = '2299bb'; //Blue
     
+    private static Milestone1_Settings__c setting = Milestone1_Settings__c.getOrgDefaults();
+    
     public void init()
     {
     	
@@ -151,26 +153,87 @@ public with sharing class Milestone2_Charts_GanttController {
     *   Retrieve the data doing a dynamic query by object type.
     */
     private void retrieveData(){
-        
+        string predecessorEnd;
+        string definedSortOrder;
         List<Id> parentRecords = new List<Id>();
-        String query = 'Select ' + idFieldName + ',' + startDateFieldName + ',' + endDateFieldName + ',' + nameFieldName + ',' + completedFieldName + ',' + predecessor +
-                    ' from ' + objectType + ' where ' + filterFieldName +'=\'' + mytarget + '\' order by ' + startDateFieldName + ',' + endDateFieldName + ',' + nameFieldName;
+        String query;
         String childQuery;
         
-        sobjectList = Database.query(query);
+        //build sort order for parent items.
+        if(predecessor == 'Predecessor_Task__c'){ // if parent item is a task
+        	predecessorEnd = 'Predecessor_Task__r.Due_Date__c';
+        	if(setting.Custom_Task_Sort_Order__c != null){
+        		definedSortOrder = setting.Custom_Task_Sort_Order__c;
+        	}
+        }
+        else{
+        	predecessorEnd = 'Predecessor_Milestone__r.Deadline__c';
+        	if(setting.Custom_Milestone_Sort_Order__c != null){
+        		definedSortOrder = setting.Custom_Milestone_Sort_Order__c;
+        	}
+        }
+        
+        if(definedSortOrder == null){
+        	query = 'Select ' + idFieldName + ',' + startDateFieldName + ',' + endDateFieldName + ',' + nameFieldName + ',' + completedFieldName + ',' + predecessor +
+                    ' from ' + objectType + ' where ' + filterFieldName +'=\'' + mytarget + '\' order by ' + startDateFieldName + ',' + endDateFieldName + ',' + predecessorEnd + ',' + nameFieldName;
+        }
+        else{
+        	query = 'Select ' + idFieldName + ',' + startDateFieldName + ',' + endDateFieldName + ',' + nameFieldName + ',' + completedFieldName + ',' + predecessor +
+                    ' from ' + objectType + ' where ' + filterFieldName +'=\'' + mytarget + '\' order by ' + definedSortOrder;
+        }
+        
+        try{
+        	sobjectList = Database.query(query);
+        }catch(exception e){ 
+        	//if the custom sort order was not define properly use default sort order.
+        	sobjectList = Database.query(
+        	'Select ' + idFieldName + ',' + startDateFieldName + ',' + endDateFieldName + ',' + nameFieldName + ',' + completedFieldName + ',' + predecessor +
+            ' from ' + objectType + ' where ' + filterFieldName +'=\'' + mytarget + '\' order by ' + startDateFieldName + ',' + endDateFieldName + ',' + predecessorEnd + ',' + nameFieldName
+        	);
+        }
 
 
         for(sObject obj : sObjectList){
             parentRecords.add(obj.Id);
 
         }
+        
+        definedSortOrder = null;
+        
+        //build sort order for child items.
+        if(childpredecessor == 'Predecessor_Task__c'){ //if child item is a task
+        	predecessorEnd = 'Predecessor_Task__r.Due_Date__c';
+        	if(setting.Custom_Task_Sort_Order__c != null){
+        		definedSortOrder = setting.Custom_Task_Sort_Order__c;
+        	}
+        }
+        else{
+        	predecessorEnd = 'Predecessor_Milestone__r.Deadline__c';
+        	if(setting.Custom_Milestone_Sort_Order__c != null){
+        		definedSortOrder = setting.Custom_Milestone_Sort_Order__c;
+        	}
+        }
 
 		if(objectType != Schema.SObjectType.Milestone1_Task__c.getName()){
         //add child records for multi level gantt
-        childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
-        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName;
-            
-            childsObjectList = Database.query(childQuery);
+        if(definedSortOrder == null){
+        	childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
+        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + predecessorEnd + ',' + childnameFieldName;
+        }
+        else{
+        	childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
+        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + definedSortOrder;
+        }
+        	try{
+            	childsObjectList = Database.query(childQuery);
+        	}
+        	catch(exception ex){ 
+        		//if the custom sort order was not define properly use default sort order.
+        		childsObjectList = Database.query(
+        			'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
+        			' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + predecessorEnd + ',' + childnameFieldName
+        		);
+        	}
 
             if(childsObjectList.size() > 0){
                 buildChildTaskObjects();

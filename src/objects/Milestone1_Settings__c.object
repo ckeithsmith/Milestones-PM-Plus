@@ -35,6 +35,32 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Custom_Milestone_Sort_Order__c</fullName>
+        <description>Used to define the milestone sort order for the gantt chart.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When Defining the sort order please input a coma separated value list using field API names. You may also define ascending or descending order by including ASC/DESC.
+
+For example: Kickoff__c ASC, Deadline__c ASC, Name ASC
+
+The above example will</inlineHelpText>
+        <label>Custom Milestone Sort Order</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
+        <fullName>Custom_Task_Sort_Order__c</fullName>
+        <description>Used to define the sort order of the gantt chart.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>When Defining the sort order please input a coma separated value list using field API names. You may also define ascending or descending order by including ASC/DESC.
+
+For example: Start_Date__c ASC, Due_Date__c ASC, Name ASC</inlineHelpText>
+        <label>Custom Task Sort Order</label>
+        <required>false</required>
+        <trackTrending>false</trackTrending>
+        <type>TextArea</type>
+    </fields>
+    <fields>
         <fullName>Default_Milestone_Alias__c</fullName>
         <description>Default milestone for email to task.</description>
         <externalId>false</externalId>
