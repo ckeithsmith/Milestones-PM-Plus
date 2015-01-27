@@ -3,11 +3,13 @@ public with sharing class Milestone2_Project_Task_RL_Controller
     public list<milestone1_task__c> lstTask {get;set;}
     public String pageMode { get; set; }
     public String taskKeyPrefix {public get; private set;}
+    public string taskRecordTypeId {public get; private set;}
     
     private milestone1_milestone__c parentMilestone;
     
     public Milestone2_Project_Task_RL_Controller(ApexPages.StandardController controller) 
     {
+    	RecordType taskRecordType = [select Id, Name, Description, DeveloperName, IsActive from RecordType where sobjecttype = 'Milestone1_Task__c' AND Name = 'MPM4 Task Create'];
         
         if(Test.isRunningTest() == false){
         	controller.addFields(new String[]{'Name'});
@@ -19,6 +21,7 @@ public with sharing class Milestone2_Project_Task_RL_Controller
         populateTasks();
         
         taskKeyPrefix = Milestone1_Task__c.sobjectType.getDescribe().getKeyPrefix();
+        taskRecordTypeId = taskRecordType.Id;
         
     }
     

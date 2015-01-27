@@ -15,10 +15,10 @@
             </apex:pageblockTable>
      
             <apex:pageBlockButtons location="top">
-                <apex:commandButton action="{!saveTasks}" value="Save Tasks"/>                   
-                <apex:commandButton onclick="window.open('{!LEFT($Api.Enterprise_Server_URL_260,(FIND('/services',$Api.Enterprise_Server_URL_260)))}setup/ui/recordtypeselect.jsp?ent=01Ia00000026UrL&retURL=%2F{!Milestone1_Milestone__c.Id}&save_new_url=%2F{!taskKeyPrefix}%2Fe%3FCF00Na0000009in41%3D{!URLENCODE(Milestone1_Milestone__c.Name)}%26CF00Na0000009in41_lkid%3D{!Milestone1_Milestone__c.Id}%26retURL%3D%252F{!Milestone1_Milestone__c.Id}', '_top');" value="New Task"/>                   
-            </apex:pageBlockButtons>
-            
+                <apex:commandButton action="{!saveTasks}" value="Save Tasks"/>    
+				<apex:commandButton onclick="window.open('{!LEFT($Api.Enterprise_Server_URL_260,(FIND('/services',$Api.Enterprise_Server_URL_260)))}{!taskKeyPrefix}/e?{!taskRecordTypeId}={!URLENCODE(Milestone1_Milestone__c.Name)}&CF00Nj0000002arHy_lkid={!Milestone1_Milestone__c.Id}%26retURL%3D%252F{!Milestone1_Milestone__c.Id}', '_top');" value="New Task"/>                
+			</apex:pageBlockButtons>
+          
       </apex:pageBlock>
   </apex:form>
 </apex:page>
