@@ -26,6 +26,16 @@
         <type>Checkbox</type>
     </fields>
     <fields>
+        <fullName>Auto_Milestone_Task_Completion__c</fullName>
+        <defaultValue>true</defaultValue>
+        <description>Marks the Milestone as complete if all children tasks are complete, and marks the child tasks as complete if the milestone is marked as complete.</description>
+        <externalId>false</externalId>
+        <inlineHelpText>This setting is used to determine if the milestone or tasks should automatically completed.</inlineHelpText>
+        <label>Auto Milestone/Task Completion</label>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Auto_Unfollow_Reassignment__c</fullName>
         <defaultValue>true</defaultValue>
         <externalId>false</externalId>

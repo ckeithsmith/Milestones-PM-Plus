@@ -149,23 +149,29 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     
     public static void checkTaskDependencies(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap) {
         Map<Id, Set<Milestone1_Task__c>> taskMap = new Map<Id, Set<Milestone1_Task__c>>();
+        List<Milestone1_Task__c> tasksToUpdate = new List<Milestone1_Task__c>();
 
-        if(checkForMilestoneKickoffShift(oldMap, newMap)){
+        if(checkForMilestoneKickoffShift(oldMap, newMap) || checkForMilestoneCompletion(oldMap, newMap)){
 
-	        for(Milestone1_Task__c task: [SELECT Id, Start_Date__c, Due_Date__c, Project_Milestone__c FROM Milestone1_Task__c WHERE Project_Milestone__c IN :newMap.keySet()]) {
+	        for(Milestone1_Task__c task: [SELECT Id, Start_Date__c, Due_Date__c, Project_Milestone__c, Complete__c FROM Milestone1_Task__c WHERE Project_Milestone__c IN :newMap.keySet()]) {
 	            if(!taskMap.containsKey(task.Project_Milestone__c)) {
 	                taskMap.put(task.Project_Milestone__c, new Set<Milestone1_Task__c>());
 	            }
 	            taskMap.get(task.Project_Milestone__c).add(task);
 	        }
-	        List<Milestone1_Task__c> tasksToUpdate = new List<Milestone1_Task__c>();
+	        
 	        for(Milestone1_Milestone__c newRec : newMap.values()) {
 	            Milestone1_Milestone__c oldRec = oldMap.get(newRec.Id);
 	            if(oldRec.Kickoff__c != null && oldRec.Deadline__c != null && newRec.Kickoff__c != null && newRec.Deadline__c != null) {
 	                Integer kickoffShift = oldRec.Kickoff__c.daysBetween(newRec.Kickoff__c);
 	                Integer deadlineShift = oldRec.Deadline__c.daysBetween(newRec.Deadline__c);
+	                Boolean taskCloseOut = false;
+	                
+	                if(oldrec.complete__c != newRec.Complete__c && newRec.Complete__c == true && (Milestone1_Settings__c.getOrgDefaults() == null || Milestone1_Settings__c.getOrgDefaults().Auto_Milestone_Task_Completion__c) ){
+	                	taskCloseOut = true;
+	                }
 	
-	                if(kickoffShift == deadlineShift && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) {
+	                if( (kickoffShift == deadlineShift && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut) {
 	                    for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
 	                    	if (task.Start_Date__c != null)
 	                    	{
@@ -175,15 +181,32 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	                    	{
 	                        	task.Due_Date__c = task.Due_Date__c.addDays(deadlineShift);
 	                    	}
+	                    	if(taskCloseOut){
+	                    		task.Complete__c = true;
+	                    	}
 	                    }
 	                    tasksToUpdate.addAll(taskMap.get(newRec.Id));
 	                }
 	            }
 	        }
-	        
-	        update tasksToUpdate;
-	        
+
         }
+        
+        if(tasksToUpdate.size() > 0){
+        	update tasksToUpdate;
+        }
+    }
+    
+    private static boolean checkForMilestoneCompletion(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap){
+    	
+    	for(Milestone1_Milestone__c ms : newMap.Values()){
+    		
+    		if(oldMap.get(ms.Id).Complete__c != ms.Complete__c && ms.Complete__c == true){
+    			return true;
+    		}
+    	}
+    	return false;
+    	
     }
     
     private static boolean checkForMilestoneDeadlineShift(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap){
@@ -396,7 +419,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     */
     
     public static void handleMilestoneAfterTrigger(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> recs){
-       updateParents(oldmap, recs);
+        updateParents(oldmap, recs);
     }
     
     private static void updateParents(Map<Id, Milestone1_Milestone__c> oldmap, Map<Id, Milestone1_Milestone__c> recMapById){

@@ -33,8 +33,12 @@ public class Milestone1_Task_Trigger_Utility {
     
     public static void handleTaskAfterTrigger(List<Milestone1_Task__c> recs, List<Milestone1_Task__c> oldRecs) {
         Milestone1_Task__c oldRec;
+        set<id> parentMilestones = new set<id>();
+        set<id> parentMilestonesToComplete = new set<id>();
+        set<id> parentMilestonesToMarkIncomplete = new set<id>();
         //Place all the RecIds into a List for SOQL in Clause on Subscription Query
         List<String> recIds = new List<String>();
+        Milestone1_Settings__c orgDefaultSettings = Milestone1_Settings__c.getOrgDefaults();
         for(Milestone1_Task__c rec : recs) { recIds.add(rec.Id); }
         
         List<sObject> existingSubscriptions = new List<sObject>();
@@ -57,10 +61,17 @@ public class Milestone1_Task_Trigger_Utility {
         for(Milestone1_Task__c rec : recs)
         {
         	oldRec = null;
+       	
             //Retrieve the old record which matches current record
             if(oldRecs != null && oldRecs.size() > i){
             	oldRec = oldRecs.get(i);
             }
+                    	
+        	//build parent Milestone set (used for updating milestone completion status)
+        	if( (oldrec == null && rec.ImportId__c == null || (oldrec != null && oldrec.Complete__c != rec.Complete__c) ) && (orgDefaultSettings == null || orgDefaultSettings.Auto_Milestone_Task_Completion__c) ){
+        		parentMilestones.add(rec.Project_Milestone__c);
+        	}
+ 
             //If the Task is Assigned to a User then we can proceed
             if(rec.Assigned_To__c != null)
             {
@@ -100,6 +111,32 @@ public class Milestone1_Task_Trigger_Utility {
             }
             i++;
         }
+
+		if(parentMilestones.size() > 0){
+			List<Milestone1_Task__c> checkForIncompleteTasks = [select Complete__c, Project_Milestone__c from Milestone1_Task__c where Project_Milestone__c IN :parentMilestones and Complete__c = false];
+			Map<Id, List<Milestone1_Task__c>> taskMap = new map<id, List<Milestone1_Task__c>>();
+			List<Milestone1_Milestone__c> MilestonesToUpdate = new List<Milestone1_Milestone__c>();
+			
+			for(Milestone1_Task__c task : checkForIncompleteTasks){
+				parentMilestonesToMarkIncomplete.add(task.Project_Milestone__c);
+				//using parentMilestone set for list of milestones to mark complete
+				parentMilestones.remove(task.Project_Milestone__c);
+			}
+			
+			if(parentMilestones.size() > 0){
+				MilestonesToUpdate.addAll(markMilestonesComplete(parentMilestones));
+			}
+			
+			if(parentMilestonesToMarkIncomplete.size() > 0){
+				MilestonesToUpdate.addAll(markMilestoneIncomplete(parentMilestonesToMarkIncomplete));
+			}
+			
+			if(MilestonesToUpdate.size() > 0){
+				update milestonesToUpdate;
+			}
+			
+		}       
+        
         //Perform Inserts and Deletes of Subscriptions
         try{
         	insert subscriptionsAddList;
@@ -111,6 +148,26 @@ public class Milestone1_Task_Trigger_Utility {
         }
         
         
+    }
+    
+    private static list<Milestone1_Milestone__c> markMilestonesComplete(set<Id> milestones){
+    	List<Milestone1_Milestone__c> ms = [select complete__c from Milestone1_milestone__c where id IN :milestones and Complete__c = false];
+    	
+    	for(Milestone1_Milestone__c milestone : ms){
+    		milestone.complete__c = true;
+    	}
+    	
+    	return ms;
+    }
+    
+    private static list<Milestone1_Milestone__c> markMilestoneIncomplete(set<id> milestones){
+    	List<Milestone1_Milestone__c> ms = [select complete__c from Milestone1_milestone__c where id IN :milestones and Complete__c = true];
+    	
+    	for(Milestone1_Milestone__c milestone : ms){
+    		milestone.complete__c = false;
+    	}
+    	
+    	return ms;
     }
     
     /* 
