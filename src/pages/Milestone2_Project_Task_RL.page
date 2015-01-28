@@ -1,0 +1,32 @@
+<apex:page standardcontroller="Milestone1_Milestone__c" extensions="Milestone2_Project_Task_RL_Controller">
+
+<script>
+	function refreshPage(){
+		window.top.location='/{!Milestone1_Milestone__c.id}';
+	}
+</script>
+
+  <apex:form >
+      <apex:pageBlock title="Tasks">
+       
+            <apex:pageblockTable value="{!lstTask}" var="task" >
+                <apex:column >
+                        <apex:outputLink value="{!LEFT($Api.Enterprise_Server_URL_260,(FIND('/services',$Api.Enterprise_Server_URL_260)))}{!Task.id}" target="_top">View</apex:outputLink>
+                </apex:column> 
+                <apex:repeat value="{! fieldSetMembers }" var="varFieldName"> 
+                    <apex:column >
+                        <apex:facet name="header">{! varFieldName.label}</apex:facet>
+                        <apex:inputField value="{! task[varFieldName]}"/>
+                    </apex:column>
+                </apex:repeat>
+            </apex:pageblockTable>
+     
+            <apex:pageBlockButtons location="top">
+                <apex:commandButton action="{!saveTasks}" value="Save Tasks" oncomplete="refreshPage(); return false;">
+                </apex:commandButton>    
+				<apex:commandButton onclick="window.open('{!LEFT($Api.Enterprise_Server_URL_260,(FIND('/services',$Api.Enterprise_Server_URL_260)))}{!taskKeyPrefix}/e?retURL=%2F{!Milestone1_Milestone__c.Id}', '_top');" value="New Task"/>                
+			</apex:pageBlockButtons>
+          
+      </apex:pageBlock>
+  </apex:form>
+</apex:page>
