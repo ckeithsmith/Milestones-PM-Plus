@@ -30,7 +30,10 @@
         <defaultValue>true</defaultValue>
         <description>Marks the Milestone as complete if all children tasks are complete, and marks the child tasks as complete if the milestone is marked as complete.</description>
         <externalId>false</externalId>
-        <inlineHelpText>This setting is used to determine if the milestone or tasks should automatically completed.</inlineHelpText>
+        <inlineHelpText>When enabled:
+
+-If a milestone is complete, all of the tasks belonging to the milestone will be marked as complete.
+-If all of the tasks belonging to a milestone are complete the milestone will be marked complete.</inlineHelpText>
         <label>Auto Milestone/Task Completion</label>
         <trackTrending>false</trackTrending>
         <type>Checkbox</type>
