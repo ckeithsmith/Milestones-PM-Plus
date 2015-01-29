@@ -51,6 +51,8 @@ public class Milestone1_Project_Creation_Behavior {
     private static Milestone1_Project__c testProject2 = Milestone1_Test_Utility.sampleProject('test2' + System.now());
     private static Milestone1_Milestone__c testMilestone = new Milestone1_Milestone__c();
     private static Milestone1_Milestone__c testMilestone2 = new Milestone1_Milestone__c();
+    private static list<Milestone1_Task__c> starterTasks = new list<Milestone1_Task__c>(); //tasks before predecessor is added
+    private static list<Milestone1_Task__c> tasksToUpdate = new list<Milestone1_Task__c>(); //update tasks with predecessors
     
     static {
     	
@@ -69,77 +71,92 @@ public class Milestone1_Project_Creation_Behavior {
         insert testMilestone2;
     	
     	/*testMilestone tasks*/
-        Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(testMilestone.Id); 
+    	Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(testMilestone.Id); 
         task1.Start_Date__c = date.today().addDays(-5);
-        task1.Due_Date__c = date.today().addDays(-5);   
-        insert task1;
+        task1.Due_Date__c = date.today().addDays(-5);
+        starterTasks.add(task1);  
         
         Milestone1_Task__c task2 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
         task2.Start_Date__c = date.today().addDays(-4);
         task2.Due_Date__c = date.today().addDays(-4);
-        task2.Predecessor_Task__c = task1.Id;
-        insert task2;
+        starterTasks.add(task2);
         
         Milestone1_Task__c task3 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
         task3.Start_Date__c = date.today().addDays(-3);
         task3.Due_Date__c = date.today().addDays(-3);
-        task3.Predecessor_Task__c = task2.Id;
-        insert task3;
+        starterTasks.add(task3);
         
         Milestone1_Task__c task4 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
         task4.Start_Date__c = date.today().addDays(-2);
         task4.Due_Date__c = date.today().addDays(-2);
-        task4.Predecessor_Task__c = task3.Id;
-        insert task4;
+        starterTasks.add(task4);
         
         Milestone1_Task__c task5 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
         task5.Start_Date__c = date.today().addDays(-1);
         task5.Due_Date__c = date.today().addDays(-1);
-        task5.Predecessor_Task__c = task4.Id;
-        insert task5;
+        starterTasks.add(task5);
         
         Milestone1_Task__c task6 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
         task6.Start_Date__c = date.today();
         task6.Due_Date__c = date.today();
-        task6.Predecessor_Task__c = task5.Id;
-        insert task6;
+        starterTasks.add(task6);
         
         /*testMilestone2 tasks*/
         Milestone1_Task__c task7 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id); 
         task7.Start_Date__c = date.today().addDays(-5);
-        task7.Due_Date__c = date.today().addDays(-5);   
-        insert task7;
+        task7.Due_Date__c = date.today().addDays(-5);
+        starterTasks.add(task7);
         
         Milestone1_Task__c task8 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
         task8.Start_Date__c = date.today().addDays(-4);
         task8.Due_Date__c = date.today().addDays(-4);
-        task8.Predecessor_Task__c = task7.Id;
-        insert task8;
+        starterTasks.add(task8);
         
         Milestone1_Task__c task9 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
         task9.Start_Date__c = date.today().addDays(-3);
         task9.Due_Date__c = date.today().addDays(-3);
-        task9.Predecessor_Task__c = task8.Id;
-        insert task9;
+        starterTasks.add(task9);
         
         Milestone1_Task__c task10 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
         task10.Start_Date__c = date.today().addDays(-2);
         task10.Due_Date__c = date.today().addDays(-2);
-        task10.Predecessor_Task__c = task9.Id;
-        insert task10;
+        starterTasks.add(task10);
         
         Milestone1_Task__c task11 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
         task11.Start_Date__c = date.today().addDays(-1);
         task11.Due_Date__c = date.today().addDays(-1);
-        task11.Predecessor_Task__c = task10.Id;
-        insert task11;
+        starterTasks.add(task11);
 
         
         Milestone1_Task__c task12 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
         task12.Start_Date__c = date.today();
         task12.Due_Date__c = date.today();
-        task12.Predecessor_Task__c = task11.Id;
-        insert task12;
+        starterTasks.add(task12);
+
+		insert starterTasks; // single insert for all tasks
+		
+		task2.Predecessor_Task__c = task1.Id;
+		tasksToUpdate.add(task2);
+		task3.Predecessor_Task__c = task2.Id;
+		tasksToUpdate.add(task3);
+		task4.Predecessor_Task__c = task3.Id;
+		tasksToUpdate.add(task4);
+		task5.Predecessor_Task__c = task4.Id;
+		tasksToUpdate.add(task5);
+		task6.Predecessor_Task__c = task5.Id;
+		tasksToUpdate.add(task6);
+		task8.Predecessor_Task__c = task7.Id;
+		tasksToUpdate.add(task8);
+		task9.Predecessor_Task__c = task8.Id;
+		tasksToUpdate.add(task9);
+		task10.Predecessor_Task__c = task9.Id;
+		tasksToUpdate.add(task10);
+		task11.Predecessor_Task__c = task10.Id;
+		tasksToUpdate.add(task11);
+		task12.Predecessor_Task__c = task11.Id;
+		tasksToUpdate.add(task12);
+		
+		update tasksToUpdate; // single update to map tasks to predecessors
         
         
     	
