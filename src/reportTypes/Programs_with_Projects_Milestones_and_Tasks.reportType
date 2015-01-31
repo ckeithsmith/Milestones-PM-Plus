@@ -624,22 +624,12 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>CreatedByTask__c</field>
-            <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Complete__c</field>
             <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Blocked__c</field>
-            <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>Project_Lookup__c</field>
             <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
         </columns>
         <columns>
@@ -724,16 +714,6 @@
         </columns>
         <columns>
             <checkedByDefault>false</checkedByDefault>
-            <field>RecordType</field>
-            <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>Reminder_Time__c</field>
-            <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
             <field>Task_Stage__c</field>
             <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
         </columns>
@@ -765,11 +745,6 @@
         <columns>
             <checkedByDefault>false</checkedByDefault>
             <field>Short_ID__c</field>
-            <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
-        </columns>
-        <columns>
-            <checkedByDefault>false</checkedByDefault>
-            <field>Reminder__c</field>
             <table>Milestone1_Program__c.Projects__r.Project_Milestones__r.Project_Tasks__r</table>
         </columns>
         <columns>
