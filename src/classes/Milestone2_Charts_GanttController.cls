@@ -95,7 +95,7 @@ public with sharing class Milestone2_Charts_GanttController {
                 nameFieldName = Milestone1_Milestone__c.NameClean__c.getDescribe().getName();
                 filterFieldName = Milestone1_Milestone__c.Project__c.getDescribe().getName();
                 predecessor = Milestone1_Milestone__c.Predecessor_Milestone__c.getDescribe().getName();
-
+                
                 objectType = Schema.SObjectType.Milestone1_Milestone__c.getName();
                 completedFieldName = 'Complete__c';
 
@@ -103,8 +103,8 @@ public with sharing class Milestone2_Charts_GanttController {
                 childendDateFieldName = Milestone1_Task__c.Due_Date__c.getDescribe().getName();
                 childnameFieldName = Milestone1_Task__c.Name.getDescribe().getName();
                 childfilterFieldName = Milestone1_Task__c.Project_Milestone__c.getDescribe().getName();
-                childpredecessor = Milestone1_Task__c.Predecessor_Task__c.getDescribe().getName();
-                                
+                childpredecessor = Milestone1_Task__c.Predecessor_Task__c.getDescribe().getName();             
+                
                 childobjectType = Schema.SObjectType.Milestone1_Task__c.getName();
                 childcompletedFieldName = 'Complete__c';
 
@@ -114,11 +114,10 @@ public with sharing class Milestone2_Charts_GanttController {
                 endDateFieldName = Milestone1_Task__c.Due_Date__c.getDescribe().getName();
                 nameFieldName = Milestone1_Task__c.Name.getDescribe().getName();
                 filterFieldName = Milestone1_Task__c.Project_Milestone__c.getDescribe().getName();
-                predecessor = Milestone1_Task__c.Predecessor_Task__c.getDescribe().getName();
-                                
+                predecessor = Milestone1_Task__c.Predecessor_Task__c.getDescribe().getName();              
+                
                 objectType = Schema.SObjectType.Milestone1_Task__c.getName();
                 completedFieldName = 'Complete__c';
-
                 
             }else if(mytarget.startsWith(Schema.SObjectType.Milestone1_Program__c.getKeyPrefix())){
                 startDateFieldName = Milestone1_Project__c.Kickoff__c.getDescribe().getName();
@@ -126,7 +125,7 @@ public with sharing class Milestone2_Charts_GanttController {
                 nameFieldName = Milestone1_Project__c.Name.getDescribe().getName();
                 filterFieldName = Milestone1_Project__c.Program__c.getDescribe().getName();
                 predecessor = Milestone1_Project__c.Predecessor_Project__c.getDescribe().getName();
-
+                
                 objectType = Schema.SObjectType.Milestone1_Project__c.getName();
                 completedFieldName = 'Status__c';
 
@@ -135,8 +134,8 @@ public with sharing class Milestone2_Charts_GanttController {
                 childnameFieldName = Milestone1_Milestone__c.NameClean__c.getDescribe().getName();
                 childfilterFieldName = Milestone1_Milestone__c.Project__c.getDescribe().getName();
                 childpredecessor = Milestone1_Milestone__c.Predecessor_Milestone__c.getDescribe().getName();
-
-                childobjectType = Schema.SObjectType.Milestone1_Milestone__c.getName();
+                
+				ChildobjectType = Schema.SObjectType.Milestone1_Milestone__c.getName();
                 childcompletedFieldName = 'Complete__c';
             }
              else {
@@ -158,19 +157,25 @@ public with sharing class Milestone2_Charts_GanttController {
         List<Id> parentRecords = new List<Id>();
         String query;
         String childQuery;
+        //get namespace prefix for one of our packaged objects to prefix to hardcoded api names without namespace prefix (required for runtime execution in packaging or production orgs)
+        String sfdcPrefix = SObjectType.Milestone1_Milestone__c.Name.substringBefore('Milestone1_Milestone__c');
         
         //build sort order for parent items.
-        if(predecessor == 'Predecessor_Task__c'){ // if parent item is a task
+        if(predecessor.contains('Predecessor_Task__c')){ // if parent item is a task
+        
         	predecessorEnd = 'Predecessor_Task__r.Due_Date__c';
         	if(setting.Custom_Task_Sort_Order__c != null){
         		definedSortOrder = setting.Custom_Task_Sort_Order__c;
         	}
         }
-        else{
-        	predecessorEnd = 'Predecessor_Milestone__r.Deadline__c';
+        else if (predecessor.contains('Predecessor_Milestone__c')){
+        	predecessorEnd ='Predecessor_Milestone__r.Deadline__c';
         	if(setting.Custom_Milestone_Sort_Order__c != null){
         		definedSortOrder = setting.Custom_Milestone_Sort_Order__c;
         	}
+        }
+        else if (predecessor.contains('Predecessor_Project__c')){
+        	predecessorEnd = 'Predecessor_Project__r.Deadline__c';
         }
         
         if(definedSortOrder == null){
@@ -200,46 +205,51 @@ public with sharing class Milestone2_Charts_GanttController {
         
         definedSortOrder = null;
         
-        //build sort order for child items.
-        if(childpredecessor == 'Predecessor_Task__c'){ //if child item is a task
-        	predecessorEnd = 'Predecessor_Task__r.Due_Date__c';
-        	if(setting.Custom_Task_Sort_Order__c != null){
-        		definedSortOrder = setting.Custom_Task_Sort_Order__c;
-        	}
-        }
-        else{
-        	predecessorEnd = 'Predecessor_Milestone__r.Deadline__c';
-        	if(setting.Custom_Milestone_Sort_Order__c != null){
-        		definedSortOrder = setting.Custom_Milestone_Sort_Order__c;
-        	}
-        }
-
-		if(objectType != Schema.SObjectType.Milestone1_Task__c.getName()){
-        //add child records for multi level gantt
-        if(definedSortOrder == null){
-        	childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
-        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + predecessorEnd + ',' + childnameFieldName;
-        }
-        else{
-        	childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
-        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + definedSortOrder;
-        }
-        	try{
-            	childsObjectList = Database.query(childQuery);
-        	}
-        	catch(exception ex){ 
-        		//if the custom sort order was not define properly use default sort order.
-        		childsObjectList = Database.query(
-        			'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
-        			' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + predecessorEnd + ',' + childnameFieldName
-        		);
-        	}
+        if(childpredecessor != null){
+	        //build sort order for child items.
+	        if(childpredecessor.contains('Predecessor_Task__c')){ //if child item is a task
+	        	predecessorEnd = 'Predecessor_Task__r.Due_Date__c';
+	        	if(setting.Custom_Task_Sort_Order__c != null){
+	        		definedSortOrder = setting.Custom_Task_Sort_Order__c;
+	        	}
+	        }
+	        else{
+	        	predecessorEnd = 'Predecessor_Milestone__r.Deadline__c';
+	        	if(setting.Custom_Milestone_Sort_Order__c != null){
+	        		definedSortOrder = setting.Custom_Milestone_Sort_Order__c;
+	        	}
+	        }
+	
+			if(objectType != Schema.SObjectType.Milestone1_Task__c.getName()){
+	        //add child records for multi level gantt
+	        if(definedSortOrder == null){
+	        	childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
+	        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + predecessorEnd + ',' + childnameFieldName;
+	        }
+	        else{
+	        	childQuery = 'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
+	        			 ' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + definedSortOrder;
+	        }
+	        	
+	        	
+	        	try{
+	            	childsObjectList = Database.query(childQuery);
+	        	}
+	        	catch(exception ex){ 
+	        		//if the custom sort order was not define properly use default sort order.
+	        		childsObjectList = Database.query(
+	        			'Select ' + childidFieldName + ',' + childstartDateFieldName + ',' + childendDateFieldName + ',' + childnameFieldName + ',' + childcompletedFieldName + ',' + childpredecessor + ',' + childfilterFieldName + 
+	        			' from ' + childobjectType + ' where ' + childfilterFieldName +' IN :parentRecords '+  'order by ' + childstartDateFieldName + ',' + childendDateFieldName + ',' + predecessorEnd + ',' + childnameFieldName
+	        		);
+	        	}
+			}
+        
 
             if(childsObjectList.size() > 0){
                 buildChildTaskObjects();
             }
             
-		}
+        }
 
     }
     
