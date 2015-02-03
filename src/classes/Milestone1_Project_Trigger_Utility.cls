@@ -177,7 +177,10 @@ public with sharing class Milestone1_Project_Trigger_Utility {
    
     public static void checkForDateShift(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap){
     	integer numberOfDaysShifted;
+    	
     	map<Id, integer> projectShiftMap = new map<Id, integer>();
+    	map<Id, Id> projectOldOwnersMap = new map<Id, Id>();
+    	map<Id, Id> projectNewOwnersMap = new map<Id, Id>();
     	
 	    	for(Milestone1_Project__c proj : newMap.values()){
 	    		
@@ -194,11 +197,22 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 		    		}
 	    		}
 	    		
+	    		if (oldMap.get(proj.Id).OwnerId != proj.OwnerId) {
+	    			projectNewOwnersMap.put(proj.Id,proj.OwnerId);
+	    			projectOldOwnersMap.put(proj.Id,oldMap.get(proj.Id).OwnerId);
+	    		}
+	    		
 	    	}
 	    	
 	    	if(projectShiftMap.size() > 0){
 	    		shiftProjectsMilestones(projectShiftMap);
 	    	}
+	    	
+	    	if (projectOldOwnersMap.size() > 0 && projectNewOwnersMap.size() > 0) {
+	    		updateProjectsMilestonesAssignment (projectNewOwnersMap,projectOldOwnersMap);
+	    	}
+	    	
+	    	
     	
     	
     }
@@ -217,6 +231,26 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 	    		ms.Kickoff__c += daysToShift;
 	    		ms.Deadline__c += daysToShift; 
     		}
+    		
+    	}
+    	
+    	update MilestonesToUpdate;
+    	
+    }
+    
+    public static void updateProjectsMilestonesAssignment(map<Id, Id> newProjectOwners,map<Id, Id> oldProjectOwners){
+    	
+    	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT OwnerId, Project__c
+    														from Milestone1_Milestone__c 
+    														where Project__c IN :oldProjectOwners.keySet() and Complete__c = false];
+    	
+    	for(Milestone1_Milestone__c ms : MilestonesToUpdate){
+	    		if(oldProjectOwners.get(ms.Project__c) != null){
+		    		
+		    		if (ms.OwnerId == oldProjectOwners.get(ms.Project__c)) {
+		    			ms.OwnerId = newProjectOwners.get(ms.Project__c);
+		    		}
+	    		}
     		
     	}
     	
