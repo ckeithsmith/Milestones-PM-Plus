@@ -153,6 +153,9 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 		boolean ownerChanged = false;
 		
 		map<Id, Id> milestoneOldOwnersMap = checkForMilestoneOwnerChange(oldMap, NewMap);
+        Integer kickoffShift;
+        Integer deadlineShift;
+        Boolean taskCloseOut;
 
 		if (milestoneOldOwnersMap.size() > 0) {
 			ownerChanged = true;
@@ -171,32 +174,36 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	        for(Milestone1_Milestone__c newRec : newMap.values()) {
 	            Milestone1_Milestone__c oldRec = oldMap.get(newRec.Id);
 	    		     
+	            taskCloseOut = false;
+	            kickoffShift = null;
+	            deadlineShift = null;
+	            
 	            if(oldRec.Kickoff__c != null && oldRec.Deadline__c != null && newRec.Kickoff__c != null && newRec.Deadline__c != null) {
-	                Integer kickoffShift = oldRec.Kickoff__c.daysBetween(newRec.Kickoff__c);
-	                Integer deadlineShift = oldRec.Deadline__c.daysBetween(newRec.Deadline__c);
-	                Boolean taskCloseOut = false;
+	                kickoffShift = oldRec.Kickoff__c.daysBetween(newRec.Kickoff__c);
+	                deadlineShift = oldRec.Deadline__c.daysBetween(newRec.Deadline__c);
+	            }
+	                
 	                
 	                if(oldrec.complete__c != newRec.Complete__c && newRec.Complete__c == true && (Milestone1_Settings__c.getOrgDefaults() == null || Milestone1_Settings__c.getOrgDefaults().Auto_Milestone_Task_Completion__c) ){
 	                	taskCloseOut = true;
 	                }
 	
-	                if( (kickoffShift == deadlineShift && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut || ownerChanged) {
-	                    for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
-	                    	if (task.Start_Date__c != null) {
-	                        	task.Start_Date__c = task.Start_Date__c.addDays(deadlineShift);
-	                    	}
-	                    	if (task.Due_Date__c != null) {
-	                        	task.Due_Date__c = task.Due_Date__c.addDays(deadlineShift);
-	                    	}
-	                    	if (taskCloseOut) {
-	                    		task.Complete__c = true;
-	                    	}
-	                    	if (ownerChanged && task.Assigned_To__c == milestoneOldOwnersMap.get(newRec.Id) && task.Complete__c == false) {
-	                    		
-	                    		task.Assigned_To__c = newRec.OwnerId;
-	                    	}
+	                
+	            if( (kickoffShift == deadlineShift && kickoffShift != null && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut) {
+	            	for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
+	            		
+	                	if (deadlineShift != null && task.Start_Date__c != null){
+	                        task.Start_Date__c = task.Start_Date__c.addDays(deadlineShift);
+	                    }
+	                    if (deadlineShift != null && task.Due_Date__c != null){
+	                    	task.Due_Date__c = task.Due_Date__c.addDays(deadlineShift);
+	                    }
+	                    if(taskCloseOut){
+	                    	task.Complete__c = true;	
 		    			}
-	    				
+	    				if (ownerChanged && task.Assigned_To__c == milestoneOldOwnersMap.get(newRec.Id) && task.Complete__c == false) {
+	                    	task.Assigned_To__c = newRec.OwnerId;
+	                    }
 	                    system.debug (logginglevel.error, 'taskMap.get(newRec.Id): ' + taskMap.get(newRec.Id));
 	                    tasksToUpdate.addAll(taskMap.get(newRec.Id));
 	                }

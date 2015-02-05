@@ -67,7 +67,15 @@ public class Milestone1_Milestone_Utility_Behavior {
 		setting.Auto_Milestone_Task_Completion__c = true;
 		upsert setting;
 		
+		testMilestone.kickoff__c = null;
+		testMilestone.deadline__c = null;
+		update testMilestone;
+		
+		task1.Start_Date__c = null;
+		task1.Due_Date__c = null;
 		insert task1;
+		task2.Start_Date__c = null;
+		task2.Due_Date__c = null;
 		insert task2;
 		
 		task1.complete__c = true;
@@ -97,7 +105,15 @@ public class Milestone1_Milestone_Utility_Behavior {
 		setting.Auto_Milestone_Task_Completion__c = true;
 		upsert setting;
 		
+		testMilestone.kickoff__c = null;
+		testMilestone.deadline__c = null;
+		update testMilestone;
+		
+		task1.Start_Date__c = null;
+		task1.Due_Date__c = null;
 		insert task1;
+		task2.Start_Date__c = null;
+		task2.Due_Date__c = null;
 		insert task2;
 		
 		testMilestone.complete__c = true;
