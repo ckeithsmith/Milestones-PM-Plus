@@ -54,6 +54,18 @@ public with sharing class Milestone1_Test_Utility {
         rec.Hours_Budget__c = Math.floor(Math.random() * 500 * 100) / 100;
         return rec;
     }
+    public static Milestone1_Milestone__c sampleMilestoneComplete(Milestone1_Project__c project) {
+        Milestone1_Milestone__c rec = new Milestone1_Milestone__c();
+        rec.Name = project.Name + '' + Datetime.now().getTime();
+        rec.Project__c = project.id;
+        rec.Complete__c = true; //getRandomBool(.25);
+        rec.Kickoff__c = project.Kickoff__c;
+        rec.Deadline__c = project.Deadline__c;
+        rec.Description__c = 'Description for ' + rec.Name;
+        rec.Expense_Budget__c = Math.floor(Math.random() * 50000 * 100) / 100;
+        rec.Hours_Budget__c = Math.floor(Math.random() * 500 * 100) / 100;
+        return rec;
+    }
     public static Milestone1_Milestone__c sampleMilestone(Id projectId, Id parentMSId, String name) {
 
         Milestone1_Milestone__c rec = new Milestone1_Milestone__c();
@@ -141,7 +153,7 @@ public with sharing class Milestone1_Test_Utility {
         return Milestone1_Test_Utility.sampleTask(milestoneId, Date.today().addDays(1), Date.today().addDays(1), false, false);
     }
 
-    public static Milestone1_Task__c sampleTaskComplete(Id milestoneId) {
+    public static Milestone1_Task__c sampleTaskComplete (Id milestoneId) {
         return Milestone1_Test_Utility.sampleTask(milestoneId, Date.today().addDays(1), Date.today().addDays(1), true, false);
     }
 

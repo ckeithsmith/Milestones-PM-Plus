@@ -240,9 +240,12 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     
     public static void updateProjectsMilestonesAssignment(map<Id, Id> newProjectOwners,map<Id, Id> oldProjectOwners){
     	
+    	system.debug (logginglevel.error, 'were here: updateProjectsMilestonesAssignment');
     	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT OwnerId, Project__c
     														from Milestone1_Milestone__c 
     														where Project__c IN :oldProjectOwners.keySet() and Complete__c = false];
+    	
+    	system.debug (logginglevel.error, 'MilestonesToUpdate:' + MilestonesToUpdate);
     	
     	for(Milestone1_Milestone__c ms : MilestonesToUpdate){
 	    		if(oldProjectOwners.get(ms.Project__c) != null){
