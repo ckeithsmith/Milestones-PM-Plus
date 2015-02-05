@@ -814,7 +814,7 @@ IMAGE(&quot;http://chart.apis.google.com/chart?chxt=y&amp;chbh=a&amp;chs=300x225
     <validationRules>
         <fullName>CannotBeCompleteWithOpenTasks</fullName>
         <active>false</active>
-        <errorConditionFormula>if( and(Complete__c == true, Total_Open_Tasks__c &gt; 0), true, false)</errorConditionFormula>
+        <errorConditionFormula>false</errorConditionFormula>
         <errorDisplayField>Complete__c</errorDisplayField>
         <errorMessage>You cannot mark a milestone as complete if it has open tasks.</errorMessage>
     </validationRules>
