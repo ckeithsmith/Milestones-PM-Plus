@@ -249,42 +249,6 @@ public class Milestone1_Milestone_Utility_Behavior {
 		System.assertEquals(false, task2.complete__c);
 	}
 	
-	/***************************************************************************************
-	
-	shouldUpdateMilestoneOwners - Given a project with milestones, WHEN the parent project has
-							 had owner changed, THEN all incomplete, child milestones having the same old owner should be updated and with completed milestones left alone.
-	
-	****************************************************************************************/
-	static testmethod void shouldUpdateMilestoneOwners() 
-	{
-		Milestone1_Milestone__c m1 = Milestone1_Test_Utility.sampleMilestone(testProject);
-		Milestone1_Milestone__c m2 = Milestone1_Test_Utility.sampleMilestone(testProject);
-		
-		m2.complete__c = true;
-		insert m1;
-		system.debug('m1 owner id after insert is: '+ m1.OwnerId);
-		insert m2;
-		system.debug('m2 owner id after insert is: '+ m2.OwnerId);
-		
-		testProject.OwnerId = Milestone1_Test_Utility.createSFUser().Id;
-		
-		test.startTest();
-		system.debug('previous project owner id before update is: '+ testProject.OwnerId);
-		update testProject;
-		test.stopTest();
-		
-		m1 = [SELECT OwnerId FROM Milestone1_Milestone__c WHERE id = :m1.id];
-		m2 = [SELECT OwnerId FROM Milestone1_Milestone__c WHERE id = :m2.id];
-		
-		testproject = [SELECT OwnerId FROM Milestone1_Project__c WHERE id =: testproject.id];
-		system.debug('current project owner id after update is: '+ testProject.OwnerId);
-		
-		//owner changed for incomplete milestone having same name
-		System.assertEquals(testProject.OwnerId, m1.OwnerId);
-		
-		//owner NOT changed for complete task having same name
-		System.assertEquals(System.UserInfo.GetUserId(), m2.OwnerId);
-	}
 	
 	/***************************************************************************************
 	

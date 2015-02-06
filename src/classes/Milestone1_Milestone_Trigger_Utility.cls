@@ -158,18 +158,14 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 		
         if (checkForMilestoneKickoffShift(oldMap, newMap) || checkForMilestoneCompletion(oldMap, newMap) || checkForMilestoneOwnerChange(oldMap, NewMap)){
 	        relatedTasks = [SELECT Id, Start_Date__c, Due_Date__c, Project_Milestone__c, Complete__c, Assigned_To__c FROM Milestone1_Task__c WHERE Project_Milestone__c IN :newMap.keySet()];
-	        //if (relatedTasks.size() > 0) {
 		        for(Milestone1_Task__c task: relatedTasks) {
 		            if(!taskMap.containsKey(task.Project_Milestone__c)) {
 		                taskMap.put(task.Project_Milestone__c, new Set<Milestone1_Task__c>());
 		            }
-		            system.debug (logginglevel.error, 'TASK: ' + task);
 		            taskMap.get(task.Project_Milestone__c).add(task);
 		            
 		        }
-	        //}
 	        
-	        system.debug (logginglevel.error, 'taskMap size: ' + taskMap.size());
 	        for(Milestone1_Milestone__c newRec : newMap.values()) {
 	            Milestone1_Milestone__c oldRec = oldMap.get(newRec.Id);
 	    		     
@@ -194,9 +190,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	           		ownerChanged = true;
 	            }
 	            
-	            if( (kickoffShift == deadlineShift && kickoffShift != null && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut || ownerChanged) {
-	            	system.debug (logginglevel.error, 'JERRYtaskMap.get(newRec.Id) is: ' + newRec.Id + '--' + taskMap.get(newRec.Id));
-	            	//if (taskMap.size() > 0) {
+	            if( (kickoffShift == deadlineShift && kickoffShift != null && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut || ownerChanged && taskMap.size() > 0) {
 		            	for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
 		            		
 		                	if (deadlineShift != null && task.Start_Date__c != null){
@@ -211,10 +205,9 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 		    				if (ownerChanged && task.Assigned_To__c == oldRec.OwnerId && task.Complete__c == false) {
 		                    	task.Assigned_To__c = newRec.OwnerId;
 		                    }
-		                    //system.debug (logginglevel.error, 'taskMap.get(newRec.Id): ' + taskMap.get(newRec.Id));
 		                    
 		                }
-	            	//}
+
 	                tasksToUpdate.addAll(taskMap.get(newRec.Id));
 	            }
 	          

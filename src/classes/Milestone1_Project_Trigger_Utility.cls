@@ -204,14 +204,17 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     }
     
     public static void updateMilestoneOwners(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap) {
-    	Map<Id, Set<Milestone1_Milestone__c>> milestoneMap = new Map<Id, Set<Milestone1_Milestone__c>>();
+    	Map<Id, List<Milestone1_Milestone__c>> milestoneMap = new Map<Id, List<Milestone1_Milestone__c>>();
     	List<Milestone1_Milestone__c> milestonesToUpdate = new List<Milestone1_Milestone__c>();
+    	list<Milestone1_Milestone__c> projMilestones = new list<Milestone1_Milestone__c>();
     	
     	if (checkForProjectOwnerChange(oldMap, NewMap)) {
-    		for(Milestone1_Milestone__c ms: [SELECT Id, Project__c, Complete__c, OwnerId FROM Milestone1_Milestone__c WHERE Project__c IN :newMap.keySet()]) {
+    		projMilestones = [SELECT Id, Project__c, Complete__c, OwnerId FROM Milestone1_Milestone__c WHERE Project__c IN :newMap.keySet() and Complete__c = false];
+    		for(Milestone1_Milestone__c ms: projMilestones) {
 	            if(!milestoneMap.containsKey(ms.Project__c)) {
-	                milestoneMap.put(ms.Project__c, new Set<Milestone1_Milestone__c>());
+	                milestoneMap.put(ms.Project__c, new List<Milestone1_Milestone__c>());
 	            }
+	            
 	            milestoneMap.get(ms.Project__c).add(ms);
 	            
 	        }
@@ -219,9 +222,9 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 	    	for(Milestone1_Project__c newRec : newMap.values()) {
 	    		Milestone1_Project__c oldRec = oldMap.get(newRec.Id);
 	    		
-	    		if(oldrec.ownerid != newRec.ownerId) {
+	    		if(oldrec.ownerid != newRec.ownerId && milestoneMap.get(newRec.Id) != null) {
 	    			for (Milestone1_Milestone__c ms : milestoneMap.get(newRec.Id) ) {
-	    				if (ms.OwnerId == oldRec.OwnerId && ms.Complete__c == false) {
+	    				if (ms.OwnerId == oldRec.OwnerId) {
 	                    	ms.OwnerId = newRec.OwnerId;
 	                    }
 	    			}
