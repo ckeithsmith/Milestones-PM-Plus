@@ -179,10 +179,8 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     	integer numberOfDaysShifted;
     	
     	map<Id, integer> projectShiftMap = new map<Id, integer>();
-    	map<Id, Id> projectOldOwnersMap = new map<Id, Id>();
-    	map<Id, Id> projectNewOwnersMap = new map<Id, Id>();
     	
-	    	for(Milestone1_Project__c proj : newMap.values()){
+	    for(Milestone1_Project__c proj : newMap.values()){
 	    		
 	    		if(oldMap.get(proj.Id).Kickoff__c != null && proj.Kickoff__c != null 
 	    		   && oldMap.get(proj.Id).Kickoff__c != proj.Kickoff__c 
@@ -197,24 +195,57 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 		    		}
 	    		}
 	    		
-	    		if (oldMap.get(proj.Id).OwnerId != proj.OwnerId) {
-	    			projectNewOwnersMap.put(proj.Id,proj.OwnerId);
-	    			projectOldOwnersMap.put(proj.Id,oldMap.get(proj.Id).OwnerId);
-	    		}
+	    }
+	    	
+    	if(projectShiftMap.size() > 0){
+    		shiftProjectsMilestones(projectShiftMap);
+    	}
+	    	
+    }
+    
+    public static void updateMilestoneOwners(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap) {
+    	Map<Id, Set<Milestone1_Milestone__c>> milestoneMap = new Map<Id, Set<Milestone1_Milestone__c>>();
+    	List<Milestone1_Milestone__c> milestonesToUpdate = new List<Milestone1_Milestone__c>();
+    	
+    	if (checkForProjectOwnerChange(oldMap, NewMap)) {
+    		for(Milestone1_Milestone__c ms: [SELECT Id, Project__c, Complete__c, OwnerId FROM Milestone1_Milestone__c WHERE Project__c IN :newMap.keySet()]) {
+	            if(!milestoneMap.containsKey(ms.Project__c)) {
+	                milestoneMap.put(ms.Project__c, new Set<Milestone1_Milestone__c>());
+	            }
+	            milestoneMap.get(ms.Project__c).add(ms);
+	            
+	        }
+    	
+	    	for(Milestone1_Project__c newRec : newMap.values()) {
+	    		Milestone1_Project__c oldRec = oldMap.get(newRec.Id);
 	    		
+	    		if(oldrec.ownerid != newRec.ownerId) {
+	    			for (Milestone1_Milestone__c ms : milestoneMap.get(newRec.Id) ) {
+	    				if (ms.OwnerId == oldRec.OwnerId && ms.Complete__c == false) {
+	                    	ms.OwnerId = newRec.OwnerId;
+	                    }
+	    			}
+	    			
+	    			MilestonesToUpdate.addAll(MilestoneMap.get(newRec.Id));	
+	    		}		
 	    	}
-	    	
-	    	if(projectShiftMap.size() > 0){
-	    		shiftProjectsMilestones(projectShiftMap);
-	    	}
-	    	
-	    	if (projectOldOwnersMap.size() > 0 && projectNewOwnersMap.size() > 0) {
-	    		updateProjectsMilestonesAssignment (projectNewOwnersMap,projectOldOwnersMap);
-	    	}
-	    	
-	    	
+		    	
+    	}	
+
+    	if (MilestonesToUpdate.size() > 0){
+	    	update MilestonesToUpdate;
+	    }
     	
+    }
+    
+    private static boolean checkForProjectOwnerChange(Map<Id, Milestone1_Project__c> oldMap, Map<Id, Milestone1_Project__c> newMap) {
     	
+    	for  (Milestone1_Project__c p : newMap.values()) {
+    		if (oldMap.get(p.Id).OwnerId != p.OwnerId) {
+    			return true;
+    		}
+    	}
+    	return false;	
     }
     
     public static void shiftProjectsMilestones(map<Id, integer> shiftMap){
@@ -238,28 +269,7 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     	
     }
     
-    public static void updateProjectsMilestonesAssignment(map<Id, Id> newProjectOwners,map<Id, Id> oldProjectOwners){
-    	
-    	system.debug (logginglevel.error, 'were here: updateProjectsMilestonesAssignment');
-    	list<Milestone1_Milestone__c> MilestonesToUpdate = [SELECT OwnerId, Project__c
-    														from Milestone1_Milestone__c 
-    														where Project__c IN :oldProjectOwners.keySet() and Complete__c = false];
-    	
-    	system.debug (logginglevel.error, 'MilestonesToUpdate:' + MilestonesToUpdate);
-    	
-    	for(Milestone1_Milestone__c ms : MilestonesToUpdate){
-	    		if(oldProjectOwners.get(ms.Project__c) != null){
-		    		
-		    		if (ms.OwnerId == oldProjectOwners.get(ms.Project__c)) {
-		    			ms.OwnerId = newProjectOwners.get(ms.Project__c);
-		    		}
-	    		}
-    		
-    	}
-    	
-    	update MilestonesToUpdate;
-    	
-    }
+    
     
     /**
 	* Test milestone delete
