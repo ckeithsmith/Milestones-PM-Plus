@@ -141,7 +141,7 @@ public with sharing class Milestone1_Test_Utility {
         return Milestone1_Test_Utility.sampleTask(milestoneId, Date.today().addDays(1), Date.today().addDays(1), false, false);
     }
 
-    public static Milestone1_Task__c sampleTaskComplete(Id milestoneId) {
+    public static Milestone1_Task__c sampleTaskComplete (Id milestoneId) {
         return Milestone1_Test_Utility.sampleTask(milestoneId, Date.today().addDays(1), Date.today().addDays(1), true, false);
     }
 

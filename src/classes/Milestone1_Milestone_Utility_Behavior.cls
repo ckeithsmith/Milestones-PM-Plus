@@ -248,4 +248,63 @@ public class Milestone1_Milestone_Utility_Behavior {
 		System.assertEquals(false, task1.complete__c);
 		System.assertEquals(false, task2.complete__c);
 	}
+	
+	
+	/***************************************************************************************
+	
+	shouldUpdateTaskOwners - Given a milestone with tasks, WHEN the parent milestone has
+							 had owner changed, THEN all incomplete, child tasks having the same old owner should be updated and with completed child tasks left alone.
+	
+	****************************************************************************************/
+	static testmethod void shouldUpdateTaskOwners() 
+	{
+		Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(testMilestone.id);
+		Milestone1_Task__c task2 = Milestone1_Test_Utility.sampleTaskComplete(testMilestone.id);
+		
+		insert task1;
+		insert task2;
+		
+		testMilestone.OwnerId = Milestone1_Test_Utility.createSFUser().Id;
+		
+		test.startTest();
+		update testMilestone;
+		test.stopTest();
+		
+		task1 = [SELECT assigned_to__c FROM Milestone1_Task__c WHERE id = :task1.id];
+		task2 = [SELECT assigned_to__c FROM Milestone1_Task__c WHERE id = :task2.id];
+		
+		//owner changed for incomplete task having same name
+		System.assertEquals(testMilestone.OwnerId, task1.assigned_to__c);
+		
+		//owner NOT changed for complete task having same name
+		System.assertEquals(System.UserInfo.GetUserId(), task2.assigned_to__c);
+	}
+	
+	/***************************************************************************************
+	
+	shouldNotUpdateTaskOwnersWhenOwnerNotMatching - Given a milestone with tasks, WHEN the parent milestone has
+							 had owner changed, THEN all incomplete, child tasks having DIFFERENT old owner will NOT be updated.
+	
+	****************************************************************************************/
+	static testmethod void shouldNotUpdateTaskOwnersWhenOwnerNotMatching() 
+	{
+		Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(testMilestone.id);
+		
+		user u = Milestone1_Test_Utility.createSFUser();
+		task1.assigned_to__c = u.id;
+		
+		insert task1;
+		
+		testMilestone.OwnerId = Milestone1_Test_Utility.createSFUser().Id;
+		
+		test.startTest();
+		update testMilestone;
+		test.stopTest();
+		
+		task1 = [SELECT assigned_to__c FROM Milestone1_Task__c WHERE id = :task1.id];
+		
+		//owner DID NOT change for incomplete task having different old owner
+		System.assertEquals(u.id, task1.assigned_to__c);
+		
+	}
 }

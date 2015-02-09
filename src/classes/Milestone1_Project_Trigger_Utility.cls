@@ -177,9 +177,10 @@ public with sharing class Milestone1_Project_Trigger_Utility {
    
     public static void checkForDateShift(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap){
     	integer numberOfDaysShifted;
+    	
     	map<Id, integer> projectShiftMap = new map<Id, integer>();
     	
-	    	for(Milestone1_Project__c proj : newMap.values()){
+	    for(Milestone1_Project__c proj : newMap.values()){
 	    		
 	    		if(oldMap.get(proj.Id).Kickoff__c != null && proj.Kickoff__c != null 
 	    		   && oldMap.get(proj.Id).Kickoff__c != proj.Kickoff__c 
@@ -194,13 +195,60 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 		    		}
 	    		}
 	    		
-	    	}
+	    }
 	    	
-	    	if(projectShiftMap.size() > 0){
-	    		shiftProjectsMilestones(projectShiftMap);
+    	if(projectShiftMap.size() > 0){
+    		shiftProjectsMilestones(projectShiftMap);
+    	}
+	    	
+    }
+    
+    public static void updateMilestoneOwners(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap) {
+    	Map<Id, List<Milestone1_Milestone__c>> milestoneMap = new Map<Id, List<Milestone1_Milestone__c>>();
+    	List<Milestone1_Milestone__c> milestonesToUpdate = new List<Milestone1_Milestone__c>();
+    	list<Milestone1_Milestone__c> projMilestones = new list<Milestone1_Milestone__c>();
+    	
+    	if (checkForProjectOwnerChange(oldMap, NewMap)) {
+    		projMilestones = [SELECT Id, Project__c, Complete__c, OwnerId FROM Milestone1_Milestone__c WHERE Project__c IN :newMap.keySet() and Complete__c = false];
+    		for(Milestone1_Milestone__c ms: projMilestones) {
+	            if(!milestoneMap.containsKey(ms.Project__c)) {
+	                milestoneMap.put(ms.Project__c, new List<Milestone1_Milestone__c>());
+	            }
+	            
+	            milestoneMap.get(ms.Project__c).add(ms);
+	            
+	        }
+    	
+	    	for(Milestone1_Project__c newRec : newMap.values()) {
+	    		Milestone1_Project__c oldRec = oldMap.get(newRec.Id);
+	    		
+	    		if(oldrec.ownerid != newRec.ownerId && milestoneMap.get(newRec.Id) != null) {
+	    			for (Milestone1_Milestone__c ms : milestoneMap.get(newRec.Id) ) {
+	    				if (ms.OwnerId == oldRec.OwnerId) {
+	                    	ms.OwnerId = newRec.OwnerId;
+	                    }
+	    			}
+	    			
+	    			MilestonesToUpdate.addAll(MilestoneMap.get(newRec.Id));	
+	    		}		
 	    	}
+		    	
+    	}	
+
+    	if (MilestonesToUpdate.size() > 0){
+	    	update MilestonesToUpdate;
+	    }
     	
+    }
+    
+    private static boolean checkForProjectOwnerChange(Map<Id, Milestone1_Project__c> oldMap, Map<Id, Milestone1_Project__c> newMap) {
     	
+    	for  (Milestone1_Project__c p : newMap.values()) {
+    		if (oldMap.get(p.Id).OwnerId != p.OwnerId) {
+    			return true;
+    		}
+    	}
+    	return false;	
     }
     
     public static void shiftProjectsMilestones(map<Id, integer> shiftMap){
@@ -223,6 +271,8 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     	update MilestonesToUpdate;
     	
     }
+    
+    
     
     /**
 	* Test milestone delete

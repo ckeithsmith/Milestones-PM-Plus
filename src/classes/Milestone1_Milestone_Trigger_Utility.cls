@@ -150,24 +150,30 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     public static void checkTaskDependencies(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap) {
         Map<Id, Set<Milestone1_Task__c>> taskMap = new Map<Id, Set<Milestone1_Task__c>>();
         List<Milestone1_Task__c> tasksToUpdate = new List<Milestone1_Task__c>();
+        List<Milestone1_Task__c> relatedTasks = new List<Milestone1_Task__c>();
+		boolean ownerChanged;
         Integer kickoffShift;
         Integer deadlineShift;
         Boolean taskCloseOut;
-
-        if(checkForMilestoneKickoffShift(oldMap, newMap) || checkForMilestoneCompletion(oldMap, newMap)){
-
-	        for(Milestone1_Task__c task: [SELECT Id, Start_Date__c, Due_Date__c, Project_Milestone__c, Complete__c FROM Milestone1_Task__c WHERE Project_Milestone__c IN :newMap.keySet()]) {
-	            if(!taskMap.containsKey(task.Project_Milestone__c)) {
-	                taskMap.put(task.Project_Milestone__c, new Set<Milestone1_Task__c>());
-	            }
-	            taskMap.get(task.Project_Milestone__c).add(task);
-	        }
+		
+        if (checkForMilestoneKickoffShift(oldMap, newMap) || checkForMilestoneCompletion(oldMap, newMap) || checkForMilestoneOwnerChange(oldMap, NewMap)){
+	        relatedTasks = [SELECT Id, Start_Date__c, Due_Date__c, Project_Milestone__c, Complete__c, Assigned_To__c FROM Milestone1_Task__c WHERE Project_Milestone__c IN :newMap.keySet()];
+		        for(Milestone1_Task__c task: relatedTasks) {
+		            if(!taskMap.containsKey(task.Project_Milestone__c)) {
+		                taskMap.put(task.Project_Milestone__c, new Set<Milestone1_Task__c>());
+		            }
+		            taskMap.get(task.Project_Milestone__c).add(task);
+		            
+		        }
 	        
 	        for(Milestone1_Milestone__c newRec : newMap.values()) {
 	            Milestone1_Milestone__c oldRec = oldMap.get(newRec.Id);
+	    		     
 	            taskCloseOut = false;
 	            kickoffShift = null;
 	            deadlineShift = null;
+	            ownerChanged = false;
+	            
 	            
 	            if(oldRec.Kickoff__c != null && oldRec.Deadline__c != null && newRec.Kickoff__c != null && newRec.Deadline__c != null) {
 	                kickoffShift = oldRec.Kickoff__c.daysBetween(newRec.Kickoff__c);
@@ -175,27 +181,36 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	            }
 	                
 	                
-	            if(oldrec.complete__c != newRec.Complete__c && newRec.Complete__c == true && (Milestone1_Settings__c.getOrgDefaults() == null || Milestone1_Settings__c.getOrgDefaults().Auto_Milestone_Task_Completion__c) ){
-	                taskCloseOut = true;
-	            }
+                if(oldrec.complete__c != newRec.Complete__c && newRec.Complete__c == true && (Milestone1_Settings__c.getOrgDefaults() == null || Milestone1_Settings__c.getOrgDefaults().Auto_Milestone_Task_Completion__c) ){
+                	taskCloseOut = true;
+                }
 	
-	            if( (kickoffShift == deadlineShift && kickoffShift != null && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut) {
-	            	for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
-	            		
-	                	if (deadlineShift != null && task.Start_Date__c != null){
-	                        task.Start_Date__c = task.Start_Date__c.addDays(deadlineShift);
-	                    }
-	                    if (deadlineShift != null && task.Due_Date__c != null){
-	                    	task.Due_Date__c = task.Due_Date__c.addDays(deadlineShift);
-	                    }
-	                    if(taskCloseOut){
-	                    	task.Complete__c = true;
-	                    }
-	                    
-	                }
-	                tasksToUpdate.addAll(taskMap.get(newRec.Id));
+	                
+	            if(oldrec.ownerid != newRec.ownerId) { 
+	           		ownerChanged = true;
 	            }
 	            
+	            if( (kickoffShift == deadlineShift && kickoffShift != null && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut || ownerChanged && taskMap.size() > 0) {
+		            	for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
+		            		
+		                	if (deadlineShift != null && task.Start_Date__c != null){
+		                        task.Start_Date__c = task.Start_Date__c.addDays(deadlineShift);
+		                    }
+		                    if (deadlineShift != null && task.Due_Date__c != null){
+		                    	task.Due_Date__c = task.Due_Date__c.addDays(deadlineShift);
+		                    }
+		                    if(taskCloseOut){
+		                    	task.Complete__c = true;	
+			    			}
+		    				if (ownerChanged && task.Assigned_To__c == oldRec.OwnerId && task.Complete__c == false) {
+		                    	task.Assigned_To__c = newRec.OwnerId;
+		                    }
+		                    
+		                }
+
+	                tasksToUpdate.addAll(taskMap.get(newRec.Id));
+	            }
+	          
 	        }
 
         }
@@ -230,13 +245,26 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
     
     private static boolean checkForMilestoneKickoffShift(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap){
     	
+    	
     	for(Milestone1_Milestone__c ms : newMap.Values()){
     		
     		if(oldMap.get(ms.Id).Kickoff__c != ms.Kickoff__c){
+    			
     			return true;
     		}
     	}
+    	
     	return false;
+    }
+    
+    private static boolean checkForMilestoneOwnerChange(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap) {
+    	
+    	for  (Milestone1_Milestone__c ms : newMap.values()) {
+    		if (oldMap.get(ms.Id).OwnerId != ms.OwnerId) {
+    			return true;
+    		}
+    	}
+    	return false;	
     }
     
 
