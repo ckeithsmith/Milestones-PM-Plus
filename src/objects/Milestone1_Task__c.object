@@ -635,6 +635,19 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Project_Lookup__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Project</label>
+        <referenceTo>Milestone1_Project__c</referenceTo>
+        <relationshipLabel>Tasks</relationshipLabel>
+        <relationshipName>Tasks</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Project_Milestone__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>The milestone that this task is assigned to.</inlineHelpText>

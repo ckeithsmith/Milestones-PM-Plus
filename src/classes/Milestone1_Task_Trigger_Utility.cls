@@ -260,15 +260,19 @@ public class Milestone1_Task_Trigger_Utility {
             }
 
 
-	      if(rec.Assigned_To__c == null)
-	      {
+	      if(rec.Assigned_To__c == null) {
 	        rec.Assigned_To__c = UserInfo.getUserId();
 	      }            
-            if (rec.Complete__c == false && rec.Days_Late_Formula__c > 0) {
-                rec.Days_Late__c = rec.Days_Late_Formula__c;
-            } else {
-                rec.Days_Late__c = 0; 
-            }
+          
+          if (rec.Complete__c == false && rec.Days_Late_Formula__c > 0) {
+              rec.Days_Late__c = rec.Days_Late_Formula__c;
+          } else {
+              rec.Days_Late__c = 0; 
+          }
+          
+          if (rec.project_lookup__c == null) {
+          	rec.project_lookup__c = taskMilestoneMap.get(rec.project_milestone__c).project__c;	
+          }
             
         }
     }
@@ -277,7 +281,7 @@ public class Milestone1_Task_Trigger_Utility {
     {
         Set<String> ids = new Set<String>();
         for(Milestone1_Task__c rec : recs) { ids.add(rec.Project_Milestone__c); }
-        List<Milestone1_Milestone__c> parentMilestones = [Select Id, Name, Deadline__c, KickOff__c from Milestone1_Milestone__c where Id in :ids];
+        List<Milestone1_Milestone__c> parentMilestones = [Select Id, Name, Deadline__c, KickOff__c, Project__c from Milestone1_Milestone__c where Id in :ids];
         
         Map<String,Milestone1_Milestone__c> taskMilestoneMap = new Map<String,Milestone1_Milestone__c>();
         for( Milestone1_Milestone__c parentMilestone : parentMilestones ) {
