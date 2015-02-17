@@ -191,6 +191,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 	            }
 	            
 	            if( (kickoffShift == deadlineShift && kickoffShift != null && deadlineShift != 0 && taskMap.containsKey(newRec.Id)) || taskCloseOut || ownerChanged && taskMap.size() > 0) {
+	            	if(taskMap != null && taskMap.get(newRec.Id) != null){
 		            	for(Milestone1_Task__c task: taskMap.get(newRec.Id)) {
 		            		
 		                	if (deadlineShift != null && task.Start_Date__c != null){
@@ -209,6 +210,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 		                }
 
 	                tasksToUpdate.addAll(taskMap.get(newRec.Id));
+	            	}
 	            }
 	          
 	        }

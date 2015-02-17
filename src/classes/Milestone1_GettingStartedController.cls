@@ -76,15 +76,7 @@ public with sharing class Milestone1_GettingStartedController {
                 
                 Milestone1_XML_Import_Utility util = new Milestone1_XML_Import_Utility();
                 
-                project = util.importProject(startProject.body.toString());
-                
-                
-                //now we need to go through and  update the project with start date and deadlines.
-                //Milestones
-                List<Milestone1_Milestone__c> milestonesRetrieved = [Select m.Name, m.Kickoff__c, m.Id, m.Alias__c, m.Deadline__c, m.Project__c,
-                    (Select Id, Name, Blocked_Reason__c, Blocked__c, Complete__c, Due_Date__c, Priority__c, Start_Date__c 
-                    From Project_Tasks__r) From Milestone1_Milestone__c m WHERE m.Project__c = :project.id Order By m.Name];
-                    
+                project = util.importProject(startProject.body.toString());  
                 
                 //start day = 3 days ago
                 project.Kickoff__c = Date.today().addDays(-5);
@@ -92,34 +84,29 @@ public with sharing class Milestone1_GettingStartedController {
                 project.Status__c = 'Active';
                 update project;
                 
+                //now we need to go through and  update the project with start date and deadlines.
+                //Milestones
+                List<Milestone1_Milestone__c> milestonesRetrieved = [Select m.Name, m.Kickoff__c, m.Id, m.Alias__c, m.Deadline__c, m.Project__c, Project_Creation_Context__c,
+                    (Select Id, Name, Blocked_Reason__c, Blocked__c, Complete__c, Due_Date__c, Priority__c, Start_Date__c 
+                    From Project_Tasks__r) From Milestone1_Milestone__c m WHERE m.Project__c = :project.id Order By m.Name];
+                    
                 Integer offset = -4;
                 Date max_Deadline_Date = Date.today();
                 //milestones
                 integer aliasCount = [Select count() from Milestone1_Milestone__c Where Alias__c LIKE 'DEMO_%'];
                 for (Milestone1_Milestone__c current : milestonesRetrieved) {
                     aliasCount++;
-                    Date max_Due_Date = Date.today();
-                    current.Kickoff__c = Date.today().addDays(offset);
                     for (Milestone1_Task__c task : current.Project_Tasks__r) {
                         offset++;   
-                        task.Start_Date__c = Date.today().addDays(offset);
-                        task.Due_Date__c = Date.today().addDays(offset+1);
                         
                         if (current.Name.startsWith('1')) {
                             task.Complete__c = true;
                         }
-                        if (max_Due_Date < task.Due_Date__c){
-                            max_Due_Date = task.Due_Date__c;
-                        }
                         tasks.add(task);
                     }
                     
-                    current.Deadline__c = max_Due_Date;
                     if (current.Name.startsWith('1')) {
                         current.Complete__c = true;
-                    }
-                    if (current.Deadline__c > max_Deadline_Date){
-                        max_Deadline_Date = current.Deadline__c;
                     }
                     
                     //get a unique milestone alias
@@ -135,7 +122,7 @@ public with sharing class Milestone1_GettingStartedController {
                 
                 update tasks;
                 update milestones;
-                
+              
             }
         
         return project;
