@@ -57,6 +57,36 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
         
     }
     
+    public static void setProjectOwners (map<Id, Milestone1_Milestone__c> oldMap, list<Milestone1_Milestone__c> newMilestones) {
+    
+	    set <Id> projectIds = new set <id> ();
+	    list <Milestone1_Project__c> projects = new list <Milestone1_Project__c> (); 
+	    
+	    map <Id,Id> projectUserMap = new map <Id,Id> ();
+	    
+	    for (Milestone1_Milestone__c ms : newMilestones) {
+	    		projectIds.add(ms.project__c);		
+	    }
+	    
+	    projects = [SELECT Id, OwnerId FROM Milestone1_Project__c WHERE Id IN :projectIds];
+	    
+	    for (Milestone1_Project__c projRec : projects) {
+	    	if (projectUserMap.get(projRec.id) == null) {
+	    		projectUserMap.put(projRec.id, projRec.OwnerId);
+	    	}	
+	    }
+	    
+	    for (Milestone1_Milestone__c newRec : newMilestones) {
+		    	if (oldMap != null && oldMap.get(newRec.id) != null) {
+		    		if (newRec.Project__c != oldMap.get(newRec.id).Project__c) {
+		    			newRec.Project_Owner__c = projectUserMap.get(newRec.Id);		
+		    		}
+		    	} else {
+		    		newRec.Project_Owner__c = projectUserMap.get(newRec.project__c);	
+		    	}	
+	    }
+	    
+    }
     
     public static void checkMilestoneManualReparent(Map<Id, Milestone1_Milestone__c> oldMap, Map<Id, Milestone1_Milestone__c> newMap){
         Boolean allPassed = true;
@@ -205,6 +235,9 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
 			    			}
 		    				if (ownerChanged && task.Assigned_To__c == oldRec.OwnerId && task.Complete__c == false) {
 		                    	task.Assigned_To__c = newRec.OwnerId;
+		                    }
+		                    if (ownerChanged && task.Project_Owner__c != newRec.Project_Owner__c) {
+		                    	task.Project_Owner__c = newRec.Project_Owner__c;
 		                    }
 		                    
 		                }

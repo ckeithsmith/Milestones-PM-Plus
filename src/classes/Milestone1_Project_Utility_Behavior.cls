@@ -83,5 +83,31 @@ shouldUpdateMilestoneOwners - Given a project with milestones, WHEN the parent p
 		system.assertEquals(user1.Id, task4.Assigned_To__c);
 
 	}
+/***************************************************************************************
+	
+shouldSetProjectOwnersLookupOnMilestones - Given a project with milestones, WHEN the parent project has
+							 had owner changed, THEN all child milestones having 
+							 should be updated with the project owner.
+	
+****************************************************************************************/
+	static testmethod void shouldSetProjectOwnerLookupOnMilestones() 
+	{
+		
+		Milestone1_Task__c task1 = Milestone1_Test_Utility.sampleTask(m1.id);
+		insert task1;
+		
+		test.startTest();
+		testProject.OwnerId = user3.Id;
+		update testProject;
+		test.stopTest();
+		
+		m1 = [SELECT Id, OwnerId, project__c, project_owner__c FROM Milestone1_Milestone__c WHERE id = :m1.id];
+		
+		testproject = [SELECT OwnerId FROM Milestone1_Project__c WHERE id =: testproject.id];
+		
+		//Milestone's (m1) Project owner lookup field is set to project owner
+		System.assertEquals(user3.Id, m1.Project_Owner__c);
+
+	}
 
 }

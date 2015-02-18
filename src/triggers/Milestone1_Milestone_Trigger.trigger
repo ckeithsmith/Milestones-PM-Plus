@@ -8,11 +8,13 @@ trigger Milestone1_Milestone_Trigger on Milestone1_Milestone__c (before insert, 
 		else if(Trigger.isUpdate){
 			//prevent manual reparenting of Milestones
 			Milestone1_Milestone_Trigger_Utility.checkMilestoneManualReparent(trigger.oldMap, trigger.newMap);
+			Milestone1_Milestone_Trigger_Utility.setProjectOwners(trigger.oldMap, trigger.new);
 		} 
 		else {
 			//insert
 			Milestone1_Milestone_Trigger_Utility.handleMilestoneBeforeTrigger(trigger.new, trigger.newMap);
-		}
+			Milestone1_Milestone_Trigger_Utility.setProjectOwners(trigger.oldMap, trigger.new);
+		} 
 	} 
 	else {
 		if(Trigger.isDelete){

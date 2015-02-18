@@ -204,8 +204,8 @@ public with sharing class Milestone1_Project_Trigger_Utility {
     }
     
     public static void updateMilestoneOwners(map<id, Milestone1_Project__c> oldMap, map<id, Milestone1_Project__c> newMap) {
-    	Map<Id, List<Milestone1_Milestone__c>> milestoneMap = new Map<Id, List<Milestone1_Milestone__c>>();
-    	List<Milestone1_Milestone__c> milestonesToUpdate = new List<Milestone1_Milestone__c>();
+    	map<Id, List<Milestone1_Milestone__c>> milestoneMap = new Map<Id, List<Milestone1_Milestone__c>>();
+    	list<Milestone1_Milestone__c> milestonesToUpdate = new List<Milestone1_Milestone__c>();
     	list<Milestone1_Milestone__c> projMilestones = new list<Milestone1_Milestone__c>();
     	
     	if (checkForProjectOwnerChange(oldMap, NewMap)) {
@@ -218,15 +218,19 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 	            milestoneMap.get(ms.Project__c).add(ms);
 	            
 	        }
-    	
+
 	    	for(Milestone1_Project__c newRec : newMap.values()) {
 	    		Milestone1_Project__c oldRec = oldMap.get(newRec.Id);
-	    		
-	    		if(oldrec.ownerid != newRec.ownerId && milestoneMap.get(newRec.Id) != null) {
+	    		if(oldRec.ownerId != newRec.ownerId && milestoneMap.get(newRec.Id) != null) {
 	    			for (Milestone1_Milestone__c ms : milestoneMap.get(newRec.Id) ) {
+	    				//if milestone owner is the same as project owner, we want to keep the project owner in sync
 	    				if (ms.OwnerId == oldRec.OwnerId) {
 	                    	ms.OwnerId = newRec.OwnerId;
 	                    }
+	                    
+	                    //for each changed milestone owner, reset the project owner email as well, we want to keep the project owner email in sync
+	                    ms.Project_Owner__c = newRec.OwnerId;
+	                    
 	    			}
 	    			
 	    			MilestonesToUpdate.addAll(MilestoneMap.get(newRec.Id));	
