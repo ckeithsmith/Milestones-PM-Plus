@@ -100,7 +100,6 @@ public class Milestone1_Task_Trigger_Utility {
             //Lets remove the previous Assigned To Follower if oldRec exists, and if the Assignment changed to another user.
             if(oldRec != null && oldRec.Assigned_To__c != null && oldRec.Assigned_To__c != rec.Assigned_To__c)
             {
-                system.debug('Unfollow..');
                 AutoChatterSetting chatterSettings = new AutoChatterSetting(oldRec.Assigned_To__c, oldRec.Assigned_To__r.ProfileId);
                 List<sObject> existingSubscriptionList = userSubscriptionMap.get(oldRec.Assigned_To__c);
                 sObject existingSubscription = getSubscriptionForUserAndRec(oldRec,existingSubscriptionList,userSubscriptionMap);
@@ -272,6 +271,10 @@ public class Milestone1_Task_Trigger_Utility {
           if (rec.project_lookup__c == null) {
           	rec.project_lookup__c = taskMilestoneMap.get(rec.project_milestone__c).project__c;	
           }
+          
+          if (rec.project_owner__c == null) {
+          	rec.project_owner__c = taskMilestoneMap.get(rec.project_milestone__c).Project_Owner__c;
+          }
             
         }
     }
@@ -280,7 +283,7 @@ public class Milestone1_Task_Trigger_Utility {
     {
         Set<String> ids = new Set<String>();
         for(Milestone1_Task__c rec : recs) { ids.add(rec.Project_Milestone__c); }
-        List<Milestone1_Milestone__c> parentMilestones = [Select Id, Name, Deadline__c, KickOff__c, Project__c from Milestone1_Milestone__c where Id in :ids];
+        List<Milestone1_Milestone__c> parentMilestones = [Select Id, Name, Deadline__c, KickOff__c, Project__c, Project_Owner__c from Milestone1_Milestone__c where Id in :ids];
         
         Map<String,Milestone1_Milestone__c> taskMilestoneMap = new Map<String,Milestone1_Milestone__c>();
         for( Milestone1_Milestone__c parentMilestone : parentMilestones ) {

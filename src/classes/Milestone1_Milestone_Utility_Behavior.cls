@@ -307,4 +307,24 @@ public class Milestone1_Milestone_Utility_Behavior {
 		System.assertEquals(u.id, task1.assigned_to__c);
 		
 	}
+	/***************************************************************************************
+	
+	shouldUpdateMilestoneProjectOwnerLookup - Given a milestone, WHEN created, THEN milestone's project owner field should be set to project owner.
+	
+	****************************************************************************************/
+	static testmethod void shouldUpdateMilestoneProjectOwnerLookup()
+	{
+		Milestone1_Milestone__c ms1 = Milestone1_Test_Utility.sampleMilestone(testProject.Id,null,'Milestone 1' + System.now());
+		Milestone1_Project__c prj = new Milestone1_Project__c();
+		
+		test.startTest();
+		insert ms1;
+		test.stopTest();
+		
+		
+		ms1 = [SELECT project_owner__c FROM Milestone1_Milestone__c WHERE id = :ms1.id];
+		prj = [Select OwnerId From Milestone1_Project__c WHERE id = :testProject.Id];
+		System.assertEquals(prj.OwnerId, ms1.project_owner__c);
+		
+	}
 }

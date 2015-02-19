@@ -663,6 +663,28 @@
         <writeRequiresMasterRead>false</writeRequiresMasterRead>
     </fields>
     <fields>
+        <fullName>Project_Owner_Email__c</fullName>
+        <externalId>false</externalId>
+        <label>Project Owner Email</label>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Email</type>
+        <unique>false</unique>
+    </fields>
+    <fields>
+        <fullName>Project_Owner__c</fullName>
+        <deleteConstraint>SetNull</deleteConstraint>
+        <externalId>false</externalId>
+        <label>Project Owner</label>
+        <referenceTo>User</referenceTo>
+        <relationshipName>Tasks</relationshipName>
+        <required>false</required>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Lookup</type>
+    </fields>
+    <fields>
         <fullName>Project__c</fullName>
         <externalId>false</externalId>
         <formula>HYPERLINK(&quot;/&quot; &amp; Project_Milestone__r.Project__c, Project_Milestone__r.Project__r.Name,&apos;_self&apos;)</formula>
