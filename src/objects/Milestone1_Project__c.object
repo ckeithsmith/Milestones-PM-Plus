@@ -652,6 +652,17 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
         <requireRowSelection>true</requireRowSelection>
     </webLinks>
     <webLinks>
+        <fullName>Project_Configuration</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Project Configuration</masterLabel>
+        <openType>sidebar</openType>
+        <page>Milestone1_Project_Config</page>
+        <protected>false</protected>
+    </webLinks>
+    <webLinks>
         <fullName>Project_Report</fullName>
         <availability>online</availability>
         <description>A link to the project report.</description>

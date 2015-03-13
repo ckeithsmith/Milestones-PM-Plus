@@ -1,0 +1,36 @@
+<apex:page controller="Milestone1_Project_Config_Utility" docType="html-5.0">
+<apex:form >
+<div style="width:50%;">
+<apex:pageBlock mode="edit">
+
+<apex:pageBlockButtons >
+<apex:commandButton value="Save" action="{!saveProjectConfig}">
+<!-- <apex:param name="projId" value="{!Milestone1_Project__c.id}" assignTo="{!projId}"/> -->
+</apex:commandButton>
+<apex:commandButton value="Cancel" action="{!cancel}"/>
+</apex:pageBlockButtons>
+
+<apex:outputpanel >
+<apex:pageBlockSection columns="1" title="Project Configuration" >
+
+<apex:pageBlockSectionItem dataStyleClass="width=100%;">
+<apex:outputLabel value="Project Owner: "/>
+<apex:inputField value="{!project.ownerId}"/>
+</apex:pageBlockSectionItem><br/>
+
+<apex:pageBlockSectionItem dataStyleClass="width=100%;" helpText="Leave blank or a value of 0 if you do not want to delay project. If you would like to move back a project use a negitive number, if you would like to move foward a project use a positive number."> 
+<apex:outputText value="# of days to shift project: " styleClass="align:left;"/>
+<apex:input value="{!numberOfDaysToShift}" type="number"/>
+</apex:pageBlockSectionItem><br/>
+
+<apex:pageBlockSectionItem dataStyleClass="width=100%;" helpText="When selected the project will be adjusted to exclude weekend work."> 
+<apex:outputText value="Exclude weekend work: " styleClass="align:left;"/>
+<apex:inputCheckBox value="{!workDay}"/>
+</apex:pageBlockSectionItem><br/>
+
+</apex:pageBlockSection>
+</apex:outputpanel>
+</apex:pageBlock>
+</div>
+</apex:form>
+</apex:page>

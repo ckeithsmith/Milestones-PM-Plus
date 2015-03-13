@@ -1,14 +1,28 @@
 global class Milestone1_Project_Config_Utility {
-	private static integer numberOfDaysToShift;
-	public boolean workDay;
+	public static integer numberOfDaysToShift {get; set;}
+	public boolean workDay {get; set;}
 	private static datetime saturday = (dateTime)Date.newInstance(1900, 1, 6);
 	private static datetime sunday = (dateTime)Date.newInstance(1900, 1, 7);
 	private static map<string, sObject> recordsToUpdate = new map<string, sObject>();
+	private static list<sobject> projUpdateList = new list<sobject>();
+	private static list<sobject> milestoneUpdateList = new list<sobject>();
+	private static list<sobject> taskUpdateList = new list<sobject>();
+	public static string projectId {get; set;}
+	public static Milestone1_Project__c project {get;set;}
 	
 	public Milestone1_Project_Config_Utility(){
+		projectId = ApexPages.CurrentPage().getparameters().get('id');
+		project = [select id, ownerId from Milestone1_Project__c where id = :projectId];
 		numberOfDaysToShift = 0;
 		workDay = false;
 		
+	}
+	
+	public Milestone1_Project_Config_Utility(ApexPages.StandardController std){
+		projectId = ApexPages.CurrentPage().getparameters().get('id');
+		project = [select id, ownerId from Milestone1_Project__c where id = :projectId];
+		numberOfDaysToShift = 0;
+		workDay = false;
 	}
 	
 	public void adjustProjectForWorkWeek(string projId){
@@ -16,34 +30,30 @@ global class Milestone1_Project_Config_Utility {
 		list<sobject> projects = new list<sobject>();
 		list<sObject> milestones = new list<sObject>();
 		list<sobject> tasks = new list<sobject>();
-		list<sobject> projUpdateList = new list<sobject>();
-		list<sobject> milestoneUpdateList = new list<sobject>();
-		list<sobject> taskUpdateList = new list<sobject>();
 		
-		if(workDay == true){
-			projects = [select id, Kickoff__c, Deadline__c, ownerId, Exclude_Weekend_Work__c from Milestone1_Project__c where id = :projId];
-			milestones = [select id, Kickoff__c, Deadline__c, ownerId, Predecessor_Milestone__c, Predecessor_Milestone__r.Deadline__c, project__c, project__r.Kickoff__c, Exclude_Weekend_Work__c from Milestone1_Milestone__c where Complete__c != true ORDER BY Kickoff__c ASC, Deadline__c ASC, Predecessor_Milestone__r.Deadline__c ASC, Predecessor_Milestone__r.Kickoff__c ASC];
-			tasks = [select id, Start_Date__c, Due_Date__c, Assigned_To__c, Predecessor_Task__c, Predecessor_Task__r.Due_Date__c, Project_Milestone__c, Project_Milestone__r.Kickoff__c, Exclude_Weekend_Work__c from Milestone1_Task__c where Complete__c != true ORDER BY Start_Date__c ASC, Due_Date__c ASC, Predecessor_Task__r.Due_Date__c ASC, Predecessor_Task__r.Start_Date__c ASC];
+		projects = [select id, Kickoff__c, Deadline__c, ownerId, Exclude_Weekend_Work__c from Milestone1_Project__c where id = :projId AND Kickoff__c != null AND Deadline__c != null];
+		milestones = [select id, Kickoff__c, Deadline__c, ownerId, Predecessor_Milestone__c, Predecessor_Milestone__r.Deadline__c, project__c, project__r.Kickoff__c, Exclude_Weekend_Work__c from Milestone1_Milestone__c where Complete__c != true AND Kickoff__c != null AND Deadline__c != null ORDER BY Kickoff__c ASC, Deadline__c ASC, Predecessor_Milestone__r.Deadline__c ASC, Predecessor_Milestone__r.Kickoff__c ASC];
+		tasks = [select id, Start_Date__c, Due_Date__c, Assigned_To__c, Predecessor_Task__c, Predecessor_Task__r.Due_Date__c, Project_Milestone__c, Project_Milestone__r.Kickoff__c, Exclude_Weekend_Work__c from Milestone1_Task__c where Complete__c != true AND Start_Date__c != null AND Due_Date__c != null ORDER BY Start_Date__c ASC, Due_Date__c ASC, Predecessor_Task__r.Due_Date__c ASC, Predecessor_Task__r.Start_Date__c ASC];
 			
-			if(projects.size() > 0){
-				adjustAllRecordsForWorkDays(projects, 'project');
-			}
-			if(milestones.size() > 0){
-				adjustAllRecordsForWorkDays(milestones, 'milestone');
-			}
-			if(tasks.size() > 0){
-				adjustAllRecordsForWorkDays(tasks, 'task');
-			}
+		if(projects.size() > 0){
+			adjustAllRecordsForWorkDays(projects, 'project');
+		}
+		if(milestones.size() > 0){
+			adjustAllRecordsForWorkDays(milestones, 'milestone');
+		}
+		if(tasks.size() > 0){
+			adjustAllRecordsForWorkDays(tasks, 'task');
 		}
 		
+/*		
 		for(sObject updateRec : recordsToUpdate.values()){
-			if(updateRec.getSObjectType().getDescribe().getName().equalsIgnoreCase('project')){
+			if(updateRec.getSObjectType().getDescribe().getName().contains('Milestone1_Project__c')){
 			projUpdateList.add(updateRec);
 			}
-			else if(updateRec.getSObjectType().getDescribe().getName().equalsIgnoreCase('milestone')){
+			else if(updateRec.getSObjectType().getDescribe().getName().contains('Milestone1_Milestone__c')){
 			milestoneUpdateList.add(updateRec);
 			}
-			else if(updateRec.getSObjectType().getDescribe().getName().equalsIgnoreCase('task')){
+			else if(updateRec.getSObjectType().getDescribe().getName().contains('Milestone1_Task__c')){
 			taskUpdateList.add(updateRec);
 			}
 		}
@@ -51,6 +61,7 @@ global class Milestone1_Project_Config_Utility {
 		update projUpdateList;
 		update milestoneUpdateList;
 		update taskUpdateList;
+*/	
 	}
 	
 	public static void adjustAllRecordsForWorkDays(list<sObject> records, string objType){
@@ -82,7 +93,6 @@ global class Milestone1_Project_Config_Utility {
 		
 		for(sobject successor : records){
 			sObject predecessor;
-			system.debug(logginglevel.error, objType);
 			if(predecessorField != null && successor.get(predecessorField) != null){
 				predecessor = successor.getSObject(predecessorLookup);
 				PredecessorDeadline = date.valueOf(predecessor.get(endDateField));
@@ -97,7 +107,6 @@ global class Milestone1_Project_Config_Utility {
 			}
 			
 			if(PredecessorDeadline != null){
-				system.debug(logginglevel.error, 'lag = ' + PredecessorDeadline.daysBetween(date.valueOf(successor.get(startDateField))));
 				lagPeriodMap.put(successor.Id, PredecessorDeadline.daysBetween(date.valueOf(successor.get(startDateField))));
 			}
 		}
@@ -167,7 +176,6 @@ global class Milestone1_Project_Config_Utility {
 				newStart = PredecessorDeadline.addDays(lag);
 			}
 			newEnd = newStart.addDays(initialLength);
-			system.debug(logginglevel.error, 'newStart before shift ' + newStart);
 		}else{
 			newStart = oldStart;
 			newEnd = oldEnd;
@@ -188,8 +196,7 @@ global class Milestone1_Project_Config_Utility {
 			toDate = newEnd;
 			
 			remainingDays = getNumberOfNonWorkDays((DateTime) fromDate, (DateTime) toDate);
-			system.debug(logginglevel.error, 'Workday Duration: ' + (fromDate.daysBetween(toDate) - remainingDays));
-			
+						
 				for(integer i = remainingDays; i > 0; i = remainingDays){
 		
 					fromDate = toDate.addDays(1);
@@ -198,7 +205,6 @@ global class Milestone1_Project_Config_Utility {
 					remainingDays = getNumberOfNonWorkDays((DateTime) fromDate, (DateTime) toDate);
 					
 					newEnd = toDate;
-			
 				}
 		}
 		
@@ -232,6 +238,73 @@ global class Milestone1_Project_Config_Utility {
         }
         
         return nonWorkDays;
+	}
+	
+//////////////////////////////////////////////	
+	
+	public void moveAndReassignProject(string projId){
+		Milestone1_Project__c proj;
+		boolean updateFlg = false;
+		proj = [select id, Kickoff__c, Deadline__c, ownerId, Exclude_Weekend_Work__c from Milestone1_Project__c where id = :projId AND Kickoff__c != null AND Deadline__c != null];
+		
+		if(numberOfDaysToShift != null && numberOfDaysToShift > 0 || numberOfDaysToShift < 0){
+			proj.Kickoff__c = date.valueOf(project.Kickoff__c).addDays(numberOfDaysToShift);
+			proj.Deadline__c = date.valueOf(project.Deadline__c).addDays(numberOfDaysToShift);
+			updateFlg = true;
+		}
+		if(proj.ownerId != project.OwnerId){
+			proj.ownerId = project.OwnerId;
+			updateFlg = true;
+		}
+		if(updateFlg){
+			update project;
+		}
+		
+	}
+	
+	public pageReference saveProjectConfig(){
+		
+		projectId = ApexPages.CurrentPage().getparameters().get('id');
+		project = [select id, ownerId from Milestone1_Project__c where id = :projectId];
+
+		system.debug(logginglevel.error, projectId);		
+		if(projectId != null){
+			
+			moveAndReassignProject(projectId);
+			
+			if(workDay == true){
+				adjustProjectForWorkWeek(projectId);
+			}
+		}
+		
+		if(recordsToUpdate.size() > 0){
+			for(sObject updateRec : recordsToUpdate.values()){
+				if(updateRec.getSObjectType().getDescribe().getName().contains('Milestone1_Project__c')){
+				projUpdateList.add(updateRec);
+				}
+				else if(updateRec.getSObjectType().getDescribe().getName().contains('Milestone1_Milestone__c')){
+				milestoneUpdateList.add(updateRec);
+				}
+				else if(updateRec.getSObjectType().getDescribe().getName().contains('Milestone1_Task__c')){
+				taskUpdateList.add(updateRec);
+				}
+			}
+			
+			update projUpdateList;
+			update milestoneUpdateList;
+			update taskUpdateList;
+	        
+        	}
+        	
+		PageReference projectPage = new PageReference('/' + projectId);
+		projectPage.setRedirect(true);
+	    return projectPage;
+	}
+	
+	public pagereference cancel(){
+		PageReference projectPage = new PageReference('/' + projectId);
+		projectPage.setRedirect(true);
+	    return projectPage;
 	}
 
 }

@@ -123,7 +123,8 @@ public class Milestone1_Project_Config_Behavior {
     static testmethod void shouldAdjustForWorkDays(){
     	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility();
     	pcu.workDay = true;
-    	pcu.adjustProjectForWorkWeek(testProject.Id);
+//    	pcu.adjustProjectForWorkWeek(testProject.Id);
+    	pcu.saveProjectConfig(testProject.Id);
     	
     	testProject = [select Kickoff__c, Deadline__c from Milestone1_Project__c where id = :testProject.Id];
     	
