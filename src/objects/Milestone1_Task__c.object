@@ -349,15 +349,6 @@
         <type>Checkbox</type>
     </fields>
     <fields>
-        <fullName>CreatedByTask__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <label>CreatedByTask</label>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Days_Late_Formula__c</fullName>
         <externalId>false</externalId>
         <formula>Today() -  Due_Date__c</formula>
