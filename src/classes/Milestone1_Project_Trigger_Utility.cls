@@ -184,7 +184,8 @@ public with sharing class Milestone1_Project_Trigger_Utility {
 	    		
 	    		if(oldMap.get(proj.Id).Kickoff__c != null && proj.Kickoff__c != null 
 	    		   && oldMap.get(proj.Id).Kickoff__c != proj.Kickoff__c 
-	    		   && oldmap.get(proj.Id).Deadline__c != proj.Deadline__c){
+	    		   && oldmap.get(proj.Id).Deadline__c != proj.Deadline__c
+	    		   && (newmap.get(proj.Id).Exclude_Weekend_Work__c == false || oldMap.get(proj.Id).Exclude_Weekend_Work__c == false || newmap.get(proj.Id).Exclude_Weekend_Work__c == oldMap.get(proj.Id).Exclude_Weekend_Work__c)){
 		    		numberOfDaysShifted = oldMap.get(proj.Id).Kickoff__c.daysBetween(proj.Kickoff__c);
 		    		
 		    		if(numberOfDaysShifted != 0){

@@ -1,4 +1,4 @@
-<apex:page controller="Milestone1_Project_Config_Utility" docType="html-5.0">
+<apex:page standardController="Milestone1_Project__c" extensions="Milestone1_Project_Config_Utility" docType="html-5.0">
 <apex:form >
 <div style="width:50%;">
 <apex:pageBlock mode="edit">

@@ -42,22 +42,7 @@ public class Milestone1_Project_Config_Behavior {
         task3.Start_Date__c = Date.newInstance(1900, 1, 11);
         task3.Due_Date__c = Date.newInstance(1900, 1, 15);
         starterTasks.add(task3);
-/*        
-        Milestone1_Task__c task4 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
-        task4.Start_Date__c = Date.newInstance(1900, 1, 8);
-        task4.Due_Date__c = Date.newInstance(1900, 1, 10);
-        starterTasks.add(task4);
         
-        Milestone1_Task__c task5 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
-        task5.Start_Date__c = Date.newInstance(1900, 1, 11);
-        task5.Due_Date__c = Date.newInstance(1900, 1, 13);
-        starterTasks.add(task5);
-        
-        Milestone1_Task__c task6 = Milestone1_Test_Utility.sampleTask(testMilestone.Id);
-        task6.Start_Date__c = Date.newInstance(1900, 1, 14);
-        task6.Due_Date__c = Date.newInstance(1900, 1, 15);
-        starterTasks.add(task6);
-*/        
         /*testMilestone2 tasks*/
         Milestone1_Task__c task7 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
         task7.name = 'task7'; 
@@ -76,55 +61,30 @@ public class Milestone1_Project_Config_Behavior {
         task9.Start_Date__c = Date.newInstance(1900, 1, 26);
         task9.Due_Date__c = Date.newInstance(1900, 1, 30);
         starterTasks.add(task9);
-/*        
-        Milestone1_Task__c task10 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
-        task10.Start_Date__c = date.today().addDays(-2);
-        task10.Due_Date__c = date.today().addDays(-2);
-        starterTasks.add(task10);
-        
-        Milestone1_Task__c task11 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
-        task11.Start_Date__c = date.today().addDays(-1);
-        task11.Due_Date__c = date.today().addDays(-1);
-        starterTasks.add(task11);
 
-        
-        Milestone1_Task__c task12 = Milestone1_Test_Utility.sampleTask(testMilestone2.Id);
-        task12.Start_Date__c = date.today();
-        task12.Due_Date__c = date.today();
-        starterTasks.add(task12);
-*/
 		insert starterTasks; // single insert for all tasks
 		
 		task2.Predecessor_Task__c = task1.Id;
 		tasksToUpdate.add(task2);
 		task3.Predecessor_Task__c = task2.Id;
 		tasksToUpdate.add(task3);
-/*		task4.Predecessor_Task__c = task3.Id;
-		tasksToUpdate.add(task4);
-		task5.Predecessor_Task__c = task4.Id;
-		tasksToUpdate.add(task5);
-		task6.Predecessor_Task__c = task5.Id;
-		tasksToUpdate.add(task6);
-*/		task8.Predecessor_Task__c = task7.Id;
+		task8.Predecessor_Task__c = task7.Id;
 		tasksToUpdate.add(task8);
 		task9.Predecessor_Task__c = task8.Id;
 		tasksToUpdate.add(task9);
-/*		task10.Predecessor_Task__c = task9.Id;
-		tasksToUpdate.add(task10);
-		task11.Predecessor_Task__c = task10.Id;
-		tasksToUpdate.add(task11);
-		task12.Predecessor_Task__c = task11.Id;
-		tasksToUpdate.add(task12);
-*/		
+		
 		update tasksToUpdate; // single update to map tasks to predecessors
         
     }
     
     static testmethod void shouldAdjustForWorkDays(){
-    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility();
+    	PageReference pageRef = Page.Milestone1_Project_Config;
+    	test.setCurrentPage(pageRef);
+    	ApexPages.StandardController stdCont = new ApexPages.StandardController(testProject);
+    	ApexPages.currentPage().getParameters().put('Id', testProject.id);
+    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility(stdCont);
     	pcu.workDay = true;
-//    	pcu.adjustProjectForWorkWeek(testProject.Id);
-    	pcu.saveProjectConfig(testProject.Id);
+    	pcu.saveProjectConfig();
     	
     	testProject = [select Kickoff__c, Deadline__c from Milestone1_Project__c where id = :testProject.Id];
     	
@@ -166,6 +126,199 @@ public class Milestone1_Project_Config_Behavior {
     	
     }
     
+    static testmethod void shouldReassignProject(){
+    	user testUser = Milestone1_Test_Utility.createSFUser();
+    	
+    	PageReference pageRef = Page.Milestone1_Project_Config;
+    	test.setCurrentPage(pageRef);
+    	ApexPages.StandardController stdCont = new ApexPages.StandardController(testProject);
+    	ApexPages.currentPage().getParameters().put('Id', testProject.id);
+    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility(stdCont);
+    	
+    	testProject = [select Kickoff__c, Deadline__c, ownerId from Milestone1_Project__c where id = :testProject.Id];
+    	
+    	system.assertEquals(UserInfo.getUserId(), testProject.OwnerId);
+    	
+	   	pcu.project.OwnerId = testUser.Id;
+    	
+    	pcu.saveProjectConfig();
+    	
+    	testProject = [select Kickoff__c, Deadline__c, ownerId from Milestone1_Project__c where id = :testProject.Id];
+    	
+    	system.assertEquals(testUser.Id, testProject.OwnerId);
+    	
+    }
     
+    static testmethod void shouldShiftProject(){
+    	PageReference pageRef = Page.Milestone1_Project_Config;
+    	test.setCurrentPage(pageRef);
+    	ApexPages.StandardController stdCont = new ApexPages.StandardController(testProject);
+    	ApexPages.currentPage().getParameters().put('Id', testProject.id);
+    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility(stdCont);
+    	pcu.numberOfDaysToShift = 30;
+    	
+    	pcu.saveProjectConfig();
+    	
+    	testProject = [select Kickoff__c, Deadline__c from Milestone1_Project__c where id = :testProject.Id];
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(30), testProject.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 30).addDays(30), testProject.Deadline__c);
+    	
+    	testMilestone = [select Kickoff__c, Deadline__c from Milestone1_Milestone__c where id = :testMilestone.Id];
+    	testMilestone2 = [select Kickoff__c, Deadline__c from Milestone1_Milestone__c where id = :testMilestone2.Id];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(30), testMilestone.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 15).addDays(30), testMilestone.Deadline__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 16).addDays(30), testMilestone2.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 30).addDays(30), testMilestone2.Deadline__c);
+    	
+    	Milestone1_Task__c task1 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task1'];
+    	Milestone1_Task__c task2 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task2'];
+    	Milestone1_Task__c task3 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task3'];
+    	Milestone1_Task__c task7 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task7'];
+    	Milestone1_Task__c task8 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task8'];
+    	Milestone1_Task__c task9 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task9'];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(30), task1.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 5).addDays(30), task1.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 6).addDays(30), task2.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 10).addDays(30), task2.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 11).addDays(30), task3.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 15).addDays(30), task3.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 16).addDays(30), task7.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 20).addDays(30), task7.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 21).addDays(30), task8.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 25).addDays(30), task8.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 26).addDays(30), task9.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 30).addDays(30), task9.Due_Date__c);
+    	
+    	
+    }
+    
+    static testmethod void shouldUpdateShiftAndAdjustForWorkWeek(){
+    	user testUser = Milestone1_Test_Utility.createSFUser();
+    	
+    	PageReference pageRef = Page.Milestone1_Project_Config;
+    	test.setCurrentPage(pageRef);
+    	ApexPages.StandardController stdCont = new ApexPages.StandardController(testProject);
+    	ApexPages.currentPage().getParameters().put('Id', testProject.id);
+    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility(stdCont);
+    	pcu.numberOfDaysToShift = 7;
+    	pcu.project.OwnerId = testUser.Id;
+    	pcu.workDay = true;
+    	
+    	pcu.saveProjectConfig();
+    	
+    	testProject = [select Kickoff__c, Deadline__c, ownerId from Milestone1_Project__c where id = :testProject.Id];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(7), testProject.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 2, 9).addDays(7), testProject.Deadline__c);
+    	system.assertEquals(testUser.Id, testProject.OwnerId);
+    	
+    	testMilestone = [select Kickoff__c, Deadline__c from Milestone1_Milestone__c where id = :testMilestone.Id];
+    	testMilestone2 = [select Kickoff__c, Deadline__c from Milestone1_Milestone__c where id = :testMilestone2.Id];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(7), testMilestone.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 19).addDays(7), testMilestone.Deadline__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 22).addDays(7), testMilestone2.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 2, 9).addDays(7), testMilestone2.Deadline__c);
+    	
+    	Milestone1_Task__c task1 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task1'];
+    	Milestone1_Task__c task2 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task2'];
+    	Milestone1_Task__c task3 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task3'];
+    	Milestone1_Task__c task7 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task7'];
+    	Milestone1_Task__c task8 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task8'];
+    	Milestone1_Task__c task9 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task9'];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(7), task1.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 5).addDays(7), task1.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 8).addDays(7), task2.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 12).addDays(7), task2.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 15).addDays(7), task3.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 19).addDays(7), task3.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 22).addDays(7), task7.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 26).addDays(7), task7.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 29).addDays(7), task8.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 2, 2).addDays(7), task8.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 2, 5).addDays(7), task9.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 2, 9).addDays(7), task9.Due_Date__c);
+    	
+    	
+    }
+
+    static testmethod void shouldShiftProjectBackwards(){
+    	PageReference pageRef = Page.Milestone1_Project_Config;
+    	test.setCurrentPage(pageRef);
+    	ApexPages.StandardController stdCont = new ApexPages.StandardController(testProject);
+    	ApexPages.currentPage().getParameters().put('Id', testProject.id);
+    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility(stdCont);
+    	pcu.numberOfDaysToShift = -7;
+    	
+    	pcu.saveProjectConfig();
+    	
+    	testProject = [select Kickoff__c, Deadline__c from Milestone1_Project__c where id = :testProject.Id];
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(-7), testProject.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 30).addDays(-7), testProject.Deadline__c);
+    	
+    	testMilestone = [select Kickoff__c, Deadline__c from Milestone1_Milestone__c where id = :testMilestone.Id];
+    	testMilestone2 = [select Kickoff__c, Deadline__c from Milestone1_Milestone__c where id = :testMilestone2.Id];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(-7), testMilestone.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 15).addDays(-7), testMilestone.Deadline__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 16).addDays(-7), testMilestone2.Kickoff__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 30).addDays(-7), testMilestone2.Deadline__c);
+    	
+    	Milestone1_Task__c task1 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task1'];
+    	Milestone1_Task__c task2 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task2'];
+    	Milestone1_Task__c task3 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task3'];
+    	Milestone1_Task__c task7 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task7'];
+    	Milestone1_Task__c task8 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task8'];
+    	Milestone1_Task__c task9 = [select Start_Date__c, Due_Date__c FROM Milestone1_Task__c where name = 'task9'];
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 1).addDays(-7), task1.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 5).addDays(-7), task1.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 6).addDays(-7), task2.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 10).addDays(-7), task2.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 11).addDays(-7), task3.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 15).addDays(-7), task3.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 16).addDays(-7), task7.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 20).addDays(-7), task7.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 21).addDays(-7), task8.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 25).addDays(-7), task8.Due_Date__c);
+    	
+    	system.assertEquals(Date.newInstance(1900, 1, 26).addDays(-7), task9.Start_Date__c);
+    	system.assertEquals(Date.newInstance(1900, 1, 30).addDays(-7), task9.Due_Date__c);
+    	
+    	
+    }
+    
+    static testmethod void shouldReturnToProject(){
+    	PageReference pageRef = Page.Milestone1_Project_Config;
+    	test.setCurrentPage(pageRef);
+    	ApexPages.StandardController stdCont = new ApexPages.StandardController(testProject);
+    	ApexPages.currentPage().getParameters().put('Id', testProject.id);
+    	Milestone1_Project_Config_Utility pcu = new Milestone1_Project_Config_Utility(stdCont);
+    	
+    	pcu.cancel();
+    	
+    	pageRef = ApexPages.currentPage();
+    	
+    	system.assertEquals((string)testProject.Id, pageRef.getParameters().get('id'));
+    }
+    
+/************************************/    
 
 }
