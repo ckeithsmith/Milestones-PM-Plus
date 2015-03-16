@@ -714,24 +714,6 @@
         <unique>false</unique>
     </fields>
     <fields>
-        <fullName>Reminder_Time__c</fullName>
-        <externalId>false</externalId>
-        <label>Reminder Time</label>
-        <required>false</required>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackTrending>false</trackTrending>
-        <type>DateTime</type>
-    </fields>
-    <fields>
-        <fullName>Reminder__c</fullName>
-        <defaultValue>false</defaultValue>
-        <externalId>false</externalId>
-        <label>Reminder</label>
-        <trackFeedHistory>false</trackFeedHistory>
-        <trackTrending>false</trackTrending>
-        <type>Checkbox</type>
-    </fields>
-    <fields>
         <fullName>Short_ID__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Unique number for each task and across all projects.</inlineHelpText>
@@ -824,74 +806,6 @@
         <type>Text</type>
     </nameField>
     <pluralLabel>Tasks</pluralLabel>
-    <recordTypeTrackFeedHistory>false</recordTypeTrackFeedHistory>
-    <recordTypes>
-        <fullName>MPM4_Task_Create</fullName>
-        <active>true</active>
-        <description>Used for the &apos;New Task&apos; button on the quick task update page.</description>
-        <label>MPM4 Task Create</label>
-        <picklistValues>
-            <picklist>Class__c</picklist>
-            <values>
-                <fullName>Ad Hoc</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Defect</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Rework</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Priority__c</picklist>
-            <values>
-                <fullName>0</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>1</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>2</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>3</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>4</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-        <picklistValues>
-            <picklist>Task_Stage__c</picklist>
-            <values>
-                <fullName>Close</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Closed</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>In Progress</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>None</fullName>
-                <default>false</default>
-            </values>
-            <values>
-                <fullName>Resolved</fullName>
-                <default>false</default>
-            </values>
-        </picklistValues>
-    </recordTypes>
     <searchLayouts>
         <customTabListAdditionalFields>Project__c</customTabListAdditionalFields>
         <customTabListAdditionalFields>Project_Milestone__c</customTabListAdditionalFields>
