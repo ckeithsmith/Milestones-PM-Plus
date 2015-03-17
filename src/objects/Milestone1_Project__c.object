@@ -640,7 +640,7 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
         <masterLabel>Project Report</masterLabel>
         <openType>replace</openType>
         <protected>false</protected>
-        <url>/apex/Milestone1_Project_Report?pv0={!Milestone1_Project__c.Id}</url>
+        <url>/apex/MPM4_BASE__Milestone1_Project_Report?pv0={!Milestone1_Project__c.Id}</url>
     </webLinks>
     <webLinks>
         <fullName>Update</fullName>
