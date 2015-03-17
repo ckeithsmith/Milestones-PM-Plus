@@ -105,6 +105,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Exclude_Weekend_Work__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Exclude Weekend Work</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>GoogleGanntUrl__c</fullName>
         <externalId>false</externalId>
         <inlineHelpText>Calculated.</inlineHelpText>
@@ -194,6 +203,18 @@
         <trackFeedHistory>false</trackFeedHistory>
         <trackTrending>false</trackTrending>
         <type>Lookup</type>
+    </fields>
+    <fields>
+        <fullName>Percent_Complete__c</fullName>
+        <externalId>false</externalId>
+        <formula>Total_Complete_Task_Count__c /  Total_Open_Task_Count__c</formula>
+        <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+        <label>Percent Complete</label>
+        <precision>18</precision>
+        <required>false</required>
+        <scale>0</scale>
+        <trackTrending>false</trackTrending>
+        <type>Percent</type>
     </fields>
     <fields>
         <fullName>Predecessor_Project__c</fullName>
@@ -629,6 +650,17 @@ IMAGE( Status_TasksOpenComplete__c , &quot;Open vs. Complete Tasks&quot;) , &apo
         <page>Milestone1_Import_Project</page>
         <protected>false</protected>
         <requireRowSelection>true</requireRowSelection>
+    </webLinks>
+    <webLinks>
+        <fullName>Project_Configuration</fullName>
+        <availability>online</availability>
+        <displayType>button</displayType>
+        <height>600</height>
+        <linkType>page</linkType>
+        <masterLabel>Project Configuration</masterLabel>
+        <openType>sidebar</openType>
+        <page>Milestone1_Project_Config</page>
+        <protected>false</protected>
     </webLinks>
     <webLinks>
         <fullName>Project_Report</fullName>

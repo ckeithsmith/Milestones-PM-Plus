@@ -117,7 +117,7 @@ public with sharing class Milestone1_Milestone_Trigger_Utility {
         
         if(checkForMilestoneDeadlineShift(oldMap, newMap)){
         	
-	        for(Milestone1_Milestone__c successor: [SELECT Id, Kickoff__c, Deadline__c, Predecessor_Milestone__c, Project_Creation_Context__c FROM Milestone1_Milestone__c WHERE Predecessor_Milestone__c IN :newMap.keySet()]) {
+	        for(Milestone1_Milestone__c successor: [SELECT Id, Kickoff__c, Deadline__c, Predecessor_Milestone__c, Project_Creation_Context__c FROM Milestone1_Milestone__c WHERE Predecessor_Milestone__c IN :newMap.keySet() AND Exclude_Weekend_Work__c = false]) {
 	            if(!successorMap.containsKey(successor.Predecessor_Milestone__c)) {
 	                successorMap.put(successor.Predecessor_Milestone__c, new Set<Milestone1_Milestone__c>());
 	            }

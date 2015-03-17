@@ -433,6 +433,15 @@
         <unique>false</unique>
     </fields>
     <fields>
+        <fullName>Exclude_Weekend_Work__c</fullName>
+        <defaultValue>false</defaultValue>
+        <externalId>false</externalId>
+        <label>Exclude Weekend Work</label>
+        <trackFeedHistory>false</trackFeedHistory>
+        <trackTrending>false</trackTrending>
+        <type>Checkbox</type>
+    </fields>
+    <fields>
         <fullName>Expense_Balance__c</fullName>
         <externalId>false</externalId>
         <formula>Estimated_Expense__c - Total_Expense__c</formula>
