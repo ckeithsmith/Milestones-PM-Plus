@@ -18,7 +18,7 @@
 <apex:inputField value="{!project.ownerId}"/>
 </apex:pageBlockSectionItem><br/>
 
-<apex:pageBlockSectionItem dataStyleClass="width=100%;" helpText="Leave blank or a value of 0 if you do not want to delay project. If you would like to move back a project use a negitive number, if you would like to move foward a project use a positive number."> 
+<apex:pageBlockSectionItem dataStyleClass="width=100%;" helpText="Leave blank or a value of 0 if you do not want to delay project. If you would like to move back a project use a negative number, if you would like to move foward a project use a positive number."> 
 <apex:outputText value="# of days to shift project: " styleClass="align:left;"/>
 <apex:input value="{!numberOfDaysToShift}" type="number"/>
 </apex:pageBlockSectionItem><br/>

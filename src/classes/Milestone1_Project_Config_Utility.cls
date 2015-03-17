@@ -100,10 +100,14 @@ global class Milestone1_Project_Config_Utility {
 
 			if(lagPeriodMap.get(rec.Id) != null){	
 				rec = adjustRecordForWorkDay(rec, lagPeriodMap.get(rec.Id), objType, date.valueOf(rec.get(startDateField)), date.valueOf(rec.get(endDateField)));
-				recordsToUpdate.put((string)rec.Id, rec);
+				if(rec != null){
+					recordsToUpdate.put((string)rec.Id, rec);
+				}
 			}else{
 				rec = adjustRecordForWorkDay(rec, 0, objType, date.valueOf(rec.get(startDateField)), date.valueOf(rec.get(endDateField)));
-				recordsToUpdate.put((string)rec.Id, rec);
+				if(rec != null){
+					recordsToUpdate.put((string)rec.Id, rec);
+				}
 			}
 			
 			
@@ -151,7 +155,7 @@ global class Milestone1_Project_Config_Utility {
 				PredecessorDeadline = date.valueOf(recordsToUpdate.get((string)rec.get('Project_Milestone__c')).get('Kickoff__c'));
 			}
 		}
-		
+		if(oldStart != null && oldEnd != null){
 		initialLength = oldStart.daysBetween(oldEnd);
 		
 		if((predecessorField != null && recordsToUpdate.get((string)rec.get(predecessorField)) != null) || PredecessorDeadline != null){
@@ -199,6 +203,10 @@ global class Milestone1_Project_Config_Utility {
 		newRec.put('Exclude_Weekend_Work__c', true);
 		
 		return newRec;
+		}
+		
+		return null;
+		
 	}
 	
 	public static boolean isNotWorkDay(datetime d){
@@ -228,12 +236,19 @@ global class Milestone1_Project_Config_Utility {
 	public void moveAndReassignProject(string projId){
 		Milestone1_Project__c proj;
 		boolean updateFlg = false;
-		proj = [select id, Kickoff__c, Deadline__c, ownerId, Exclude_Weekend_Work__c from Milestone1_Project__c where id = :projId AND Kickoff__c != null AND Deadline__c != null];
+		proj = [select id, Kickoff__c, Deadline__c, ownerId, Exclude_Weekend_Work__c from Milestone1_Project__c where id = :projId];
 		
 		if(numberOfDaysToShift != null && numberOfDaysToShift > 0 || numberOfDaysToShift < 0){
-			project.Kickoff__c = date.valueOf(project.Kickoff__c).addDays(numberOfDaysToShift);
-			project.Deadline__c = date.valueOf(project.Deadline__c).addDays(numberOfDaysToShift);
-			updateFlg = true;
+			if(project.Kickoff__c != null){
+				project.Kickoff__c = date.valueOf(project.Kickoff__c).addDays(numberOfDaysToShift);
+				updateFlg = true;
+			}
+			if(project.Deadline__c != null){
+				project.Deadline__c = date.valueOf(project.Deadline__c).addDays(numberOfDaysToShift);
+				updateFlg = true;
+			}
+				
+			
 		}
 		if(proj.ownerId != this.project.OwnerId){
 			proj.ownerId = this.project.OwnerId;
