@@ -4,8 +4,8 @@
         <fullName>BeSureToExploreTheSampleProject</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Check out our growing repository of help resources and helpful links here:</shortDescription>
-        <value>Check out our growing repository of help resources here:</value>
+        <shortDescription>Be sure to explore the sample project, &quot;HOWTO: Get Started with Milestones PM&quot;.</shortDescription>
+        <value>Be sure to explore the sample project, &quot;HOWTO: Get Started with Milestones PM&quot;.</value>
     </labels>
     <labels>
         <fullName>ClickHere</fullName>
@@ -18,8 +18,8 @@
         <fullName>ClickHereToInitializeThisApp</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Click here to create a sample project</shortDescription>
-        <value>Click here to create a sample project</value>
+        <shortDescription>Click here to initialize this app</shortDescription>
+        <value>Click here to initialize this app</value>
     </labels>
     <labels>
         <fullName>Community</fullName>
@@ -32,8 +32,8 @@
         <fullName>ForCommunityAssistance</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Community Portal</shortDescription>
-        <value>&lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager/milestones-pm-support-portal&quot;&gt;Community Portal&lt;/a&gt;</value>
+        <shortDescription>For community assistance with Milestones PM, please visit &lt;a href=&quot;http://succes</shortDescription>
+        <value>For community assistance with Milestones PM+ Community Edition, please visit &lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager/milestones-pm-support-portal&quot;&gt;Community Portal&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>GettingHelp</fullName>
@@ -46,15 +46,15 @@
         <fullName>ImportantUpper</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Resources and Links</shortDescription>
-        <value>Resource and Links</value>
+        <shortDescription>IMPORTANT</shortDescription>
+        <value>IMPORTANT</value>
     </labels>
     <labels>
         <fullName>InitializationComplete</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Sample Project Created!</shortDescription>
-        <value>Sample Project Created!</value>
+        <shortDescription>Initialization Complete!</shortDescription>
+        <value>Initialization Complete!</value>
     </labels>
     <labels>
         <fullName>InitializeYourConfiguration</fullName>
@@ -68,7 +68,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>&lt;a href=&quot;http://blogs.developerforce.com/labs/2011/08/howto-contribute-to-milest</shortDescription>
-        <value>&lt;a href=&quot;http://www.passagetechnology.com/project-management-solutions/&quot;&gt;Add-Ons and Accelerators&lt;/a&gt;</value>
+        <value>&lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager&quot;&gt;Learn more&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>Milestone1_ALiasNotFound</fullName>
@@ -1033,15 +1033,15 @@
         <fullName>ProjectSummary_FirstHalf</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Admin Guide</shortDescription>
-        <value>Admin Guide</value>
+        <shortDescription>Project Summary Page</shortDescription>
+        <value>Project Summary Page</value>
     </labels>
     <labels>
         <fullName>ProjectSummary_SecondHalf</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>The first stop for Salesforce administrators!</shortDescription>
-        <value>- The first stop for Salesforce administrators!</value>
+        <shortDescription>to start using Milestones PM.</shortDescription>
+        <value>to start using Milestones PM+ Community Edition.</value>
     </labels>
     <labels>
         <fullName>StartCreatingYourFirstProject</fullName>
@@ -1061,8 +1061,8 @@
         <fullName>ToSubmitIdeasOrIssues</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Support</shortDescription>
-        <value>&lt;/b&gt;For assistance with your implementation, to upgrade, or general support, please contact milestones@passagetech.com&lt;/b&gt;</value>
+        <shortDescription>To submit ideas or issues, please visit &lt;a href=&quot;https://github.com/ForceDotComL</shortDescription>
+        <value>&lt;b&gt;You can request add-ons or enroll in a support plan by emailing us sales@passagetech.com&lt;/b&gt;.</value>
     </labels>
     <labels>
         <fullName>ViewTheGettingStartedProject</fullName>
