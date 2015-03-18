@@ -32,8 +32,8 @@
         <fullName>ForCommunityAssistance</fullName>
         <language>en_US</language>
         <protected>true</protected>
-        <shortDescription>Community Portal</shortDescription>
-        <value>&lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager/milestones-pm-support-portal&quot;&gt;Community Portal&lt;/a&gt;</value>
+        <shortDescription>Training Site</shortDescription>
+        <value>&lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager/milestones-pm-support-portal&quot;&gt;Community Portal&lt;/a&gt; - Free online support; contains links to our admin guide, community portal, release notes, etc.</value>
     </labels>
     <labels>
         <fullName>GettingHelp</fullName>
@@ -68,7 +68,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>&lt;a href=&quot;http://blogs.developerforce.com/labs/2011/08/howto-contribute-to-milest</shortDescription>
-        <value>&lt;a href=&quot;http://www.passagetechnology.com/project-management-solutions/&quot;&gt;Add-Ons and Accelerators&lt;/a&gt;</value>
+        <value>&lt;a href=&quot;http://www.passagetechnology.com/project-management-solutions/&quot;&gt;Add-Ons and Accelerators&lt;/a&gt; - Learn about Passage Technology&apos;s premium project management solutions</value>
     </labels>
     <labels>
         <fullName>Milestone1_ALiasNotFound</fullName>
@@ -1062,7 +1062,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>Support</shortDescription>
-        <value>&lt;/b&gt;For assistance with your implementation, to upgrade, or general support, please contact milestones@passagetech.com&lt;/b&gt;</value>
+        <value>&lt;a href=&quot;mailto:milestones@passagetech.com?Subject=Milestones+PM+In-App+Help+Request&quot; target=&quot;_top&quot;&gt;milestones@passagetech.com&lt;/a&gt; - Email support; for customers with a service plan</value>
     </labels>
     <labels>
         <fullName>ViewTheGettingStartedProject</fullName>

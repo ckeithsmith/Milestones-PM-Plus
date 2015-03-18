@@ -75,18 +75,15 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
 	    <apex:outputPanel id="generalInfo"> 
 	           
 	        <h2>{!$Label.ImportantUpper}</h2>
-	        
-	        <!--Check out-->
-	        <p>{!$Label.BeSureToExploreTheSampleProject}</p>
 		
 	         <!--for assistance with-->
-		    <p><apex:outputText value="{!$Label.ToSubmitIdeasOrIssues}" escape="false" /></p>
+		    <li><apex:outputText value="{!$Label.ToSubmitIdeasOrIssues}" escape="false" /></li>
 		    
 		     <!--community portal-->
-		    <p><apex:outputText value="{!$Label.ForCommunityAssistance}" escape="false" /></p>
+		    <li><apex:outputText value="{!$Label.ForCommunityAssistance}" escape="false" /></li>
 		    
 		     <!--add-ons and accelerators-->
-		    <p><apex:outputText value="{!$Label.LearnMore}" escape="false"></apex:outputText></p>
+		    <li><apex:outputText value="{!$Label.LearnMore}" escape="false"></apex:outputText></li>
 	    </apex:outputPanel>
     </apex:pageBlock>
     </apex:form>
