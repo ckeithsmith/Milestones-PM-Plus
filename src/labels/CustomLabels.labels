@@ -34,6 +34,8 @@
         <protected>true</protected>
         <shortDescription>Training Site</shortDescription>
         <value>&lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager/milestones-pm-support-portal&quot;&gt;Community Portal&lt;/a&gt; - Free online support; contains links to our admin guide, community portal, release notes, etc.</value>
+        <shortDescription>For community assistance with Milestones PM, please visit &lt;a href=&quot;http://succes</shortDescription>
+        <value>For community assistance with Milestones PM+ Community Edition, please visit &lt;a href=&quot;http://www.passagetech.com/products/milestones-project-manager/milestones-pm-support-portal&quot;&gt;Community Portal&lt;/a&gt;.</value>
     </labels>
     <labels>
         <fullName>GettingHelp</fullName>
@@ -68,7 +70,7 @@
         <language>en_US</language>
         <protected>true</protected>
         <shortDescription>&lt;a href=&quot;http://blogs.developerforce.com/labs/2011/08/howto-contribute-to-milest</shortDescription>
-        <value>&lt;a href=&quot;http://www.passagetechnology.com/project-management-solutions/&quot;&gt;Add-Ons and Accelerators&lt;/a&gt; - Learn about Passage Technology&apos;s premium project management solutions</value>
+        <value>&lt;a href=&quot;http://www.passagetechnology.com/project-management-solutions/&quot;&gt;Add-Ons and Accelerators&lt;/a&gt;</value>
     </labels>
     <labels>
         <fullName>Milestone1_ALiasNotFound</fullName>
@@ -1063,6 +1065,8 @@
         <protected>true</protected>
         <shortDescription>Support</shortDescription>
         <value>&lt;a href=&quot;mailto:milestones@passagetech.com?Subject=Milestones+PM+In-App+Help+Request&quot; target=&quot;_top&quot;&gt;milestones@passagetech.com&lt;/a&gt; - Email support; for customers with a service plan</value>
+        <shortDescription>To submit ideas or issues, please visit &lt;a href=&quot;https://github.com/ForceDotComL</shortDescription>
+        <value>&lt;b&gt;You can request add-ons or enroll in a support plan by emailing us sales@passagetech.com&lt;/b&gt;.</value>
     </labels>
     <labels>
         <fullName>ViewTheGettingStartedProject</fullName>
