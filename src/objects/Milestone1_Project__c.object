@@ -207,7 +207,7 @@
     <fields>
         <fullName>Percent_Complete__c</fullName>
         <externalId>false</externalId>
-        <formula>Total_Complete_Task_Count__c /  Total_Open_Task_Count__c</formula>
+        <formula>IF(AND(Total_Open_Task_Count__c != 0), (Total_Complete_Task_Count__c / (Total_Complete_Task_Count__c + Total_Open_Task_Count__c)), 1)</formula>
         <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
         <label>Percent Complete</label>
         <precision>18</precision>
