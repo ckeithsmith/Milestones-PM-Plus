@@ -26,7 +26,7 @@ OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISE
 OF THE POSSIBILITY OF SUCH DAMAGE.
 
 */
-public class Milestone1_Task_Trigger_Utility {
+public without sharing class Milestone1_Task_Trigger_Utility {
 
 	private static final Schema.SObjectType entitySubscriptionType = Milestone1_Schema_Helper.getGlobalDescribe().get('entitysubscription');
 	public static final string SUBSCRIPTION_LIMIT_EXCEEDED = system.label.Milestone1_MaximumPer;
@@ -112,7 +112,7 @@ public class Milestone1_Task_Trigger_Utility {
         }
 
 		if(parentMilestones.size() > 0){
-			List<Milestone1_Task__c> checkForIncompleteTasks = [select Complete__c, Project_Milestone__c from Milestone1_Task__c where Project_Milestone__c IN :parentMilestones and Complete__c = false];
+			List<Milestone1_Task__c> checkForIncompleteTasks = [select Complete__c, Project_Milestone__c from Milestone1_Task__c where Project_Milestone__c IN :parentMilestones and Complete__c = false LIMIT 100000];
 			Map<Id, List<Milestone1_Task__c>> taskMap = new map<id, List<Milestone1_Task__c>>();
 			List<Milestone1_Milestone__c> MilestonesToUpdate = new List<Milestone1_Milestone__c>();
 			
@@ -149,7 +149,7 @@ public class Milestone1_Task_Trigger_Utility {
     }
     
     private static list<Milestone1_Milestone__c> markMilestonesComplete(set<Id> milestones){
-    	List<Milestone1_Milestone__c> ms = [select complete__c from Milestone1_milestone__c where id IN :milestones and Complete__c = false];
+    	List<Milestone1_Milestone__c> ms = [select complete__c from Milestone1_milestone__c where id IN :milestones and Complete__c = false LIMIT 100000];
     	
     	for(Milestone1_Milestone__c milestone : ms){
     		milestone.complete__c = true;
@@ -159,7 +159,7 @@ public class Milestone1_Task_Trigger_Utility {
     }
     
     private static list<Milestone1_Milestone__c> markMilestoneIncomplete(set<id> milestones){
-    	List<Milestone1_Milestone__c> ms = [select complete__c from Milestone1_milestone__c where id IN :milestones and Complete__c = true];
+    	List<Milestone1_Milestone__c> ms = [select complete__c from Milestone1_milestone__c where id IN :milestones and Complete__c = true LIMIT 100000];
     	
     	for(Milestone1_Milestone__c milestone : ms){
     		milestone.complete__c = false;
